@@ -4,8 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualization - Final Project - Collegiate Football Ranking </title>
-    <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="styles.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <script src="https://d3js.org/d3.v7.js"></script>
 </head>
@@ -23,21 +21,23 @@
         <p>
             Exploration of collegiate footballl stats. Data take from  <a href="https://projects.fivethirtyeight.com/2022-election-forecast/senate">Kaggle </a>
         </p>
-        <div></div>
-        <table id="rankTable">
-            <thead>
-            <tr id="columnHeaders">
-            </tr>
-            <tr>
-                <td></td>
-                <td><svg id="marginAxis"></svg></td>
-                <td></td>
-            </tr>
-            </thead>
-            <tbody id="rankTableBody">
-
-            </tbody>
-        </table>
+        <div id="table-div">
+            <table id="rankTable">
+                <thead>
+                <tr id="columnHeaders">
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><svg id="marginAxis"></svg></td>
+                    <td></td>
+                </tr>
+                </thead>
+                <tbody id="rankTableBody">
+    
+                </tbody>
+            </table>
+        </div>
+        
     </div>
 
     <script src="js/table.js"></script>
