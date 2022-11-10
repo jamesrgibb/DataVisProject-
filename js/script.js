@@ -3,12 +3,24 @@ async function loadData () {
 
     const dataset_array = []
     for (let i = 13; i < 22; i++) {
+
         path = `data/TeamStats/cfb${i}.csv`
         let dataset = await d3.csv(path);
+
+        // clean the imported csv data
+        cleanDataFrame(dataset, i);
+
+        // Index column in cfb21 needs to be removed
+        if(i == 21){
+          dataset.columns.splice(0,1);
+        }
+
+        // append dataset to collection 
         dataset_array.push(dataset);
       }
 
     console.log(dataset_array)
+    
     // returns 9 len array, each element is full dataset from one season
     return dataset_array;
   }
@@ -41,12 +53,6 @@ async function loadData () {
   
   loadData().then((loadedData) => {
 
-    console.log(loadedData)
-
-    // clean loaded data
-    loadedData.forEach(function(dataFrame){
-        formatTeamColumn(dataFrame)
-    })
 
     globalApplicationState.data = loadedData
 
@@ -101,7 +107,7 @@ async function loadData () {
     return teamMap
   }
 
-  function formatTeamColumn(data){
+  function cleanDataFrame(data){
 
     const regex = /\((.*?)\)/
     data.forEach(function(d){
@@ -118,4 +124,5 @@ async function loadData () {
         delete d[""]
 
     })
+
   }
