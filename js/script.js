@@ -2,7 +2,7 @@
 async function loadData () {
 
     const dataset_array = []
-    for (let i = 13; i < 22; i++) {
+    for (let i = 13; i < 21; i++) {
 
         path = `data/TeamStats/cfb${i}.csv`
         let dataset = await d3.csv(path);
@@ -20,12 +20,14 @@ async function loadData () {
       }
 
     console.log(dataset_array)
-    
+
     // returns 9 len array, each element is full dataset from one season
     return dataset_array;
   }
 
 
+  // may not be ultimately neccessary
+  // keeping for now incase i find more uses 
   const tableState = {
     // data the table is drawing, could be filtered
     drawData: null, 

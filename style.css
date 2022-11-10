@@ -40,7 +40,7 @@ tbody tr {
 }
 
 tbody tr:hover {
-    background-color: #efefef;
+    background-color: #efefef !important; 
 }
 
 table > .label{
