@@ -6,31 +6,34 @@
     <title>Visualization - Final Project - Collegiate Football Ranking </title>
     <link rel="icon" href="data:,">
     <link rel="stylesheet" href="/style.css"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <script src="https://d3js.org/d3.v7.js"></script>
 </head>
 
 <body>
-    <header>
-        <h1>Data Viz Final Project</h1>
-        <div>Name: Tj VonWald-Villiard; E-Mail: u1120747@utah.edu; UID: u1120747</div>
-        <div>Name: James Gibb; E-Mail: u0915889@utah.edu; UID: u0915889</div>
-    </header>
+<header>
+    <h1>Data Viz Final Project</h1>
+    <div>Name: Tj VonWald-Villiard; E-Mail: u1120747@utah.edu; UID: u1120747</div>
+    <div>Name: James Gibb; E-Mail: u0915889@utah.edu; UID: u0915889</div>
+</header>
 
-    <div class="view">
-        <h2>Defense Wins Championships</h2>
-
-        <p>
-             <a href="https://projects.fivethirtyeight.com/2022-election-forecast/senate">Kaggle </a>
-        </p>
-        <div></div>
+<div class="view">
+    <h2>Senate Race Predictions</h2>
+    <p>
+        Exploration of collegiate footballl stats. Data take from <a
+            href="https://projects.fivethirtyeight.com/2022-election-forecast/senate">Kaggle </a>
+    </p>
+    <div id="table-div" style="margin-left: 15px;width: 600px; height: 500px; overflow: auto;">
         <table id="rankTable">
             <thead>
             <tr id="columnHeaders">
             </tr>
             <tr>
                 <td></td>
-                <td><svg id="marginAxis"></svg></td>
+                <td>
+                    <svg id="marginAxis"></svg>
+                </td>
                 <td></td>
             </tr>
             </thead>
@@ -38,9 +41,19 @@
 
             </tbody>
         </table>
+        <svg id="correlation">
+            <g id="x-axis"></g>
+            <g id="y-axis"></g>
+            <g id="lines"></g>
+            <g id="overlay"></g>
+        </svg>
     </div>
 
-    <script src="js/table.js" async defer></script>
-    <script src="js/script.js" async defer></script>
+</div>
+
+<script src="js/table.js"></script>
+<script src="js/script.js"></script>
+<script src="js/correlation.js"></script>
+<script src="js/histogram.js"></script>
 </body>
 </html>
