@@ -43,6 +43,11 @@ async function loadData () {
 
     console.log(loadedData)
 
+    // clean loaded data
+    loadedData.forEach(function(dataFrame){
+        formatTeamColumn(dataFrame)
+    })
+
     globalApplicationState.data = loadedData
 
     // get team data across all 9 seasons into map 
@@ -96,3 +101,23 @@ async function loadData () {
     return teamMap
   }
 
+  function formatTeamColumn(data){
+
+    const regex = /\((.*?)\)/
+    data.forEach(function(d){
+
+        // get the team conference and append it to the object
+        let conference = d.Team.match(regex) // returns arr 
+        
+        d.conference = conference[1]
+
+        // remove conf string from team column 
+        d.Team = d.Team.replace(conference[0], "") // replace not inplace 
+
+        // delete the index value while were at it 
+        if(d.index){
+            delete d.index
+        }
+
+    })
+  }

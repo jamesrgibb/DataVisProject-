@@ -46,7 +46,7 @@ class Table{
         // .data(d => d)
         // .join("td").text(d=>d.value);
 
-        var cells = rowSelection.selectAll('td')
+        let cells = rowSelection.selectAll('td')
 	    .data(function (row) {
 	        return columns.map(function (column) {
 	            return {column: column, value: row[column]};
