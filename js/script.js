@@ -126,11 +126,11 @@ function formatTeamColumn(data){
     })
 }
 function formatYearColumn(data) {
-
-    console.log(globalApplicationState.teamMap.size)
+    // iterate through the teamMap and check each team to see if it has all  9 seasons
     data.forEach((value,key)=> {
         console.log(value.length)
         if(value.length < 8){
+            //if not remove from the teamMap
             globalApplicationState.teamMap.delete(`${key}`)
         }
     });

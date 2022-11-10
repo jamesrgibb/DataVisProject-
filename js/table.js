@@ -1,6 +1,6 @@
 class Table{
-//
-//     constructor(globalState){
+
+    constructor(globalState){
 //
 //         // determines which season and values are drawn by the table
 //         this.state = globalState.tableState;
@@ -16,7 +16,7 @@ class Table{
 //
 //
 //         this.drawTable();
-//     }
+    }
 //
 //
 //     /** Called to update the columns when switching out table data  */
