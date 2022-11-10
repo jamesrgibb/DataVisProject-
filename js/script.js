@@ -2,7 +2,7 @@
 async function loadData () {
 
     const dataset_array = []
-    for (let i = 13; i < 22; i++) {
+    for (let i = 13; i < 21; i++) {
         path = `data/TeamStats/cfb${i}.csv`
         let dataset = await d3.csv(path);
         dataset_array.push(dataset);
@@ -55,8 +55,8 @@ async function loadData () {
 
     // set default table state
     const defaultState = {
-        drawData: globalApplicationState.data[8], 
-        tableData: globalApplicationState.data[8],
+        drawData: globalApplicationState.data[loadedData.length - 1], 
+        tableData: globalApplicationState.data[loadedData.length - 1],
 
 
         // seasonalData: null,
@@ -81,7 +81,7 @@ async function loadData () {
     
     const teamMap = new Map();
 
-    for(let i =0; i < 9; i++){
+    for(let i =0; i < array.length - 1; i++){
         let yearData = array[i]
         let teamGrouping = d3.group(yearData, d=>d.Team);
 
