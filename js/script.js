@@ -19,7 +19,7 @@ async function loadData () {
     drawData: null, 
     // unfiltered current season dataset
     tableData: null,
-    
+
     // unsure if these two are neccessary at the moment 
     // seasonalData: null,
     //defaultTableData: null, 
@@ -30,7 +30,10 @@ async function loadData () {
     tableState: null, 
     // full set of 9 seasons of data 
     data: null, 
+    // map from team to all 9 seasons of teamdata 
     teamMap: null,
+
+    // View objects held in global state
     histogram: null,
     table: null,
     correlation: null
@@ -47,13 +50,14 @@ async function loadData () {
 
     // set default table state
     const defaultState = {
-        drawData: null, 
-        tableData: null,
+        drawData: globalApplicationState.data[8], 
+        tableData: globalApplicationState.data[8],
+
+
         // seasonalData: null,
-        defaultTableData: null, 
+        //defaultTableData: null, 
 
     }
-    
     // ... then 
     globalApplicationState.tableState = defaultState;
 
