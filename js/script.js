@@ -114,10 +114,5 @@ async function loadData () {
         // remove conf string from team column 
         d.Team = d.Team.replace(conference[0], "") // replace not inplace 
 
-        // delete the index value while were at it 
-        if(d.index){
-            delete d.index
-        }
-
     })
   }
