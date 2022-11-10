@@ -2,7 +2,7 @@
 async function loadData () {
 
     const dataset_array = []
-    for (let i = 13; i < 21; i++) {
+    for (let i = 13; i < 22; i++) {
         path = `data/TeamStats/cfb${i}.csv`
         let dataset = await d3.csv(path);
         dataset_array.push(dataset);
@@ -112,7 +112,10 @@ async function loadData () {
         d.conference = conference[1]
 
         // remove conf string from team column 
-        d.Team = d.Team.replace(conference[0], "") // replace not inplace 
+        d.Team = d.Team.replace(conference[0], "") // replace not inplace
+        
+        
+        delete d[""]
 
     })
   }
