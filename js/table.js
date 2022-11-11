@@ -78,11 +78,22 @@ class Table{
     
     }
 
+    changeSeason(year){
+        let index = year -13;
+
+        let seasonData = this.state.seasonalData
+        this.state.tableData = seasonData[index]
+        this.state.drawData = seasonData[index]
+
+        this.drawTable()
+
+    }
+
 }
 
 // const tableState = {
 //     drawData: null, 
 //     tableData: null,
-//     // seasonalData: null,
+//     seasonalData: null,
 //     //defaultTableData: null, 
 //   }

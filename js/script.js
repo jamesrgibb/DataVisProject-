@@ -35,7 +35,7 @@ async function loadData () {
     tableData: null,
 
     // unsure if these two are neccessary at the moment 
-    // seasonalData: null,
+    seasonalData: null,
     //defaultTableData: null, 
   }
 
@@ -67,7 +67,7 @@ async function loadData () {
         tableData: globalApplicationState.data[loadedData.length - 1],
 
 
-        // seasonalData: null,
+        seasonalData: loadedData,
         //defaultTableData: null, 
 
     }
@@ -78,11 +78,23 @@ async function loadData () {
     globalApplicationState.table = new Table(globalApplicationState)
 
     
+    // add dropdown for switching data 
+    let seasons = ["13", "14", "15", "16", "17", "18", "19", "20"]
+    let tablediv = d3.select("#table-div")
+    tablediv.insert("label", "table").attr("for", "season").text("Choose Season")
+    tablediv.insert("select", "table").attr('name', "season").attr("id", "season").selectAll("option").data(seasons)
+    .join("option").attr("value", d=>d).attr("selected", d=> d==="20" ? "selected": "").text(d=> "20" + d);
 
+    // attach handler to select
+    d3.select("#season").on("change", changeHandler)
     
 
   });
 
+  function changeHandler(d){
+
+    globalApplicationState.table.changeSeason(this.value)
+  }
 
   function groupByTeam(array){
 
