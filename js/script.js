@@ -87,9 +87,16 @@ async function loadData () {
 
     // attach handler to select
     d3.select("#season").on("change", changeHandler)
+    // sort handler 
+    d3.select("#columnHeaders").selectAll("td").on("click", sortHandler)
     
 
   });
+
+  function sortHandler(d){
+    let header = this 
+    globalApplicationState.table.sortTable(this.__data__)
+  }
 
   function changeHandler(d){
 

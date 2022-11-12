@@ -5,6 +5,10 @@ class Table{
 
         // determines which season and values are drawn by the table 
         this.state = globalState.tableState;
+        this.sortState = {
+            column: "",
+            ascending: false
+        }
 
         this.tableHeight = 500;
         this.tableWidth = 600;
@@ -76,6 +80,35 @@ class Table{
            }
         });
     
+    }
+
+    sortTable(colName){
+        // clicking on already sorted column
+        if(this.sortState.column === colName){ 
+
+            if(this.sortState.ascending === true){
+
+                this.sortState.ascending = false;
+                this.state.drawData.sort((a,b)=> 
+                    d3.descending(+a[colName], +b[colName])
+                );
+            } 
+            else {
+                this.sortState.ascending = true
+                this.state.drawData.sort((a,b)=> 
+                    d3.ascending(+a[colName], +b[colName])
+                );
+            }
+        }
+        else {
+            this.sortState.column = colName
+            this.sortState.ascending = false;
+                this.state.drawData.sort((a,b)=> 
+                    d3.descending(+a[colName], +b[colName])
+                );
+        }
+
+        this.drawTable();
     }
 
     changeSeason(year){
