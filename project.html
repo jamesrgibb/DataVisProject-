@@ -4,10 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualization - Final Project - Collegiate Football Ranking </title>
-    <link rel="icon" href="data:,">
-    <link rel="stylesheet" href="/style.css"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
-          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://d3js.org/d3.v7.js"></script>
 </head>
 
@@ -19,38 +20,39 @@
 </header>
 
 <div class="view">
-    <h2>Senate Race Predictions</h2>
+    <h2>Does Defense Really Win Championships</h2>
+
     <p>
-        Exploration of collegiate footballl stats. Data take from <a
-            href="https://projects.fivethirtyeight.com/2022-election-forecast/senate">Kaggle </a>
+        Exploration of collegiate football statistics. Data take from  <a href="https://projects.fivethirtyeight.com/2022-election-forecast/senate">Kaggle </a>
     </p>
     <div id="table-div" style="margin-left: 15px;width: 600px; height: 500px; overflow: auto;">
         <table id="rankTable">
             <thead>
             <tr id="columnHeaders">
             </tr>
-            <tr>
-                <td></td>
-                <td>
-                    <svg id="marginAxis"></svg>
-                </td>
-                <td></td>
-            </tr>
             </thead>
             <tbody id="rankTableBody">
-
             </tbody>
         </table>
-        <svg id="correlation">
-            <g id="x-axis"></g>
-            <g id="y-axis"></g>
-            <g id="lines"></g>
-            <g id="overlay"></g>
+    </div>
+    <div id="chart-div" style="margin-left: 15px;width: 600px; height: 600px; padding: 10px;">
+        <select selected ="Team" id="selectTeam">
+            <option value="none" selected disabled hidden>
+                Team
+            </option>
+        </select>
+        <select id ="Y-Statistic" >
+            <option value="none" selected disabled hidden>
+                Y-Axis
+            </option>
+        </select>
+        <svg id="chart-svg" style=" margin: 10px">
+
         </svg>
     </div>
 
 </div>
-
+<link rel="stylesheet" href="style.css"/>
 <script src="js/table.js"></script>
 <script src="js/script.js"></script>
 <script src="js/correlation.js"></script>
