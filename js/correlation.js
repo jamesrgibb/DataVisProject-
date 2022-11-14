@@ -187,28 +187,39 @@ class Correlation {
 
         function updateTeam(selectedTeam,selectedStat){
             line
-                .data(this.data[`${selectedTeam}`][`${selectedStat}`])
-                .transition()
-                .duration(1000)
-                .attr('d',d3.line()
-                    .x(function(d){return this.xAxis(+this.years[d])})
-                    .y(function(d){return this.yAxis(+d.wins)})
-        )
+                .datum(globalApplicationState.correlation.data[`${selectedTeam}`][`${selectedStat}`])
+                .attr('d',(c,v)=> {
+                    return d3.line()
+                        .x(function (d, i) {
+                            console.log(i)
+                            return globalApplicationState.correlation.xAxis(globalApplicationState.correlation.years[i]);
+                        })
+                        .y(function (d) {
+                            return globalApplicationState.correlation.yAxis(d.wins);
+                        })
+                        (v)
+                })
                 .attr(function(d) {return teamColor(selectedTeam)})
         }
-        d3.select('#selectedTeam')
+        d3.select('#selectTeam')
             .on('change', function (d){
-                let selectedTeam = d3.selected(this).property('value')
+                let selectedTeam = d3.select(this).property('value')
                 let selectedStat = d3.select('#Y-Statistic').property('value')
-                update(selectedTeam,selectedStat)
+
+                if(selectedStat === 'none'){
+                    updateTeam(selectedTeam,'wins')
+                }
+                else {
+                    updateTeam(selectedTeam, selectedStat)
+                }
             })
-        d3.select('#Y-Statistic')
-            .on('change', function (d){
-                console.log(d3.select('#selectedTeam').property('value'))
-                let selectedTeam = d3.select('#selectedTeam').property('value')
-                let selectedStat = d3.selected(this).property('value')
-                update(selectedTeam,selectedStat)
-            })
+        // d3.select('#Y-Statistic')
+        //     .on('change', function (d){
+        //         console.log(d3.select('#selectedTeam').property('value'))
+        //         let selectedTeam = d3.select('#selectedTeam').property('value')
+        //         let selectedStat = d3.selected(this).property('value')
+        //         updateTeam(selectedTeam,selectedStat)
+        //     })
 
 
     }
