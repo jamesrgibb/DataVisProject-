@@ -12,6 +12,7 @@ class Correlation {
         this.animationDuration = 250;
         this.columns = this.state.table.state.drawData.columns
         this.data = this.state.chartData
+        console.log(this.data)
         this.Team = this.state.table.state.drawData
         this.allSelected = [];
         this.yScale = null;
@@ -79,6 +80,14 @@ class Correlation {
             .attr('fill', 'black')
             .attr('font-size', '14px')
             .attr('transform', 'rotate(-90)');
+        this.svg
+            .select('#xAxis')
+            .append('text')
+            .attr('x', 150)
+            .attr('y', 30)
+            .text('Years')
+            .style('font-size', '14px')
+            .attr('fill', 'black')
         // set event listener for the display graph variable
         d3.select('#display-graph')
             .on('click', function (d) {
@@ -91,14 +100,7 @@ class Correlation {
 
     chartSetup(currentTeam,currentStat) {
         //get stats and team values
-        this.svg
-            .select('#xAxis')
-            .append('text')
-            .attr('x', 150)
-            .attr('y', 30)
-            .text('Years')
-            .style('font-size', '14px')
-            .attr('fill', 'black')
+
         const teams = Object.keys(this.data)
         const stats = Object.keys(this.data.Akron)
         // load values into the dropdown menus
