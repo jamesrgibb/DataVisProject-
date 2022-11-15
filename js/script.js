@@ -1,5 +1,5 @@
 /* DATA LOADING */
-async function loadData() {
+async function loadData () {
 
     const dataset_array = []
     for (let i = 13; i < 21; i++) {
@@ -8,15 +8,18 @@ async function loadData() {
         let dataset = await d3.csv(path);
 
         // clean the imported csv data
-        // cleanDataFrame(dataset, i);
+        //cleanDataFrame(dataset);
 
         // Index column in cfb21 needs to be removed
-        if (i == 21) {
-            dataset.columns.splice(0, 1);
+        if(i == 21){
+            dataset.columns.splice(0,1);
         }
+
         // append dataset to collection
         dataset_array.push(dataset);
     }
+
+
 
     // returns 9 len array, each element is full dataset from one season
     return dataset_array;
@@ -54,12 +57,12 @@ loadData().then((loadedData) => {
     })
 
     globalApplicationState.data = loadedData
-    // globalApplicationState.keyMap = teamKeys(globalApplicationState.teamMap,loadedData)
 
     // get team data across all 9 seasons into map
     globalApplicationState.teamMap = groupByTeam(loadedData);
     formatYearColumn(globalApplicationState.teamMap)
     globalApplicationState.chartData = parseStats(globalApplicationState.teamMap)
+
     const defaultState = {
         drawData: globalApplicationState.data[loadedData.length - 1],
         tableData: globalApplicationState.data[loadedData.length - 1],
@@ -78,7 +81,7 @@ loadData().then((loadedData) => {
     globalApplicationState.table = new Table(globalApplicationState)
 
     // initialize correlation
-    globalApplicationState.correlation = new Correlation(globalApplicationState)
+
 
     // initialize histogram
     globalApplicationState.histogram = new Histogram(globalApplicationState)
@@ -92,8 +95,8 @@ loadData().then((loadedData) => {
     d3.select("#season").on("change", changeHandler)
     // sort handler
     d3.select("#columnHeaders").selectAll("td").on("click", sortHandler)
-
-
+    globalApplicationState.years =  [new Date('2013'), new Date('2014'), new Date('2015'), new Date('2016'), new Date('2017'), new Date('2018'), new Date('2019'), new Date('2020'), new Date('2021')]
+    globalApplicationState.correlation = new Correlation(globalApplicationState)
 });
 
 function sortHandler(d) {
@@ -135,15 +138,15 @@ function groupByTeam(array) {
 function cleanDataFrame(data) {
 
     const regex = /\s\((.*?)\)/
-    data.forEach(function (d, i) {
+    data.forEach(function (d) {
 
         // get the team conference and append it to the object
         let conference = d.Team.match(regex) // returns arr
-        // remove conf string from team column
+        // debugger;
 
+        // remove conf string from team column
         d.Team = d.Team.replace(conference[0], "") // replace not inplace
 
-        delete d[""]
 
     })
 

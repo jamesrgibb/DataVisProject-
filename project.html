@@ -4,11 +4,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualization - Final Project - Collegiate Football Ranking </title>
+
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css"/>
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap" rel="stylesheet">
     <script src="https://d3js.org/d3.v7.js"></script>
 </head>
 
@@ -20,10 +22,10 @@
 </header>
 
 <div class="view">
-    <h2>Does Defense Really Win Championships</h2>
+    <h2>Does Defense Really Win Championships?</h2>
 
     <p>
-        Exploration of collegiate football statistics. Data take from  <a href="https://projects.fivethirtyeight.com/2022-election-forecast/senate">Kaggle </a>
+        Exploration of collegiate football statistics. Data take from  <a href="https://www.kaggle.com/datasets/jeffgallini/college-football-team-stats-2019?select=cfb14.csv">Kaggle </a>
     </p>
     <div id="table-div" style="margin-left: 15px;width: 600px; height: 500px; overflow: auto;">
         <table id="rankTable">
@@ -37,17 +39,17 @@
     </div>
     <div id="chart-div" style="margin-left: 15px;width: 600px; height: 600px; padding: 10px;">
         <select selected ="Team" id="selectTeam">
-            <option value="none" selected disabled hidden>
+            <option id= "teamSelect" value="Akron" selected disabled hidden>
                 Team
             </option>
         </select>
         <select id ="Y-Statistic" >
-            <option value="none" selected disabled hidden>
+            <option id= "statSelect" value="wins" selected disabled hidden>
                 Y-Axis
             </option>
         </select>
+        <button id="display-graph">Display Graph</button>
         <svg id="chart-svg" style=" margin: 10px">
-
         </svg>
     </div>
 
