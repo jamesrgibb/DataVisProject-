@@ -14,7 +14,6 @@ class Correlation {
         this.data = this.state.chartData
         this.Team = this.state.table.state.drawData
         this.allSelected = [];
-
         this.yScale = null;
         this.xScale = null;
         this.xAxis = null;
@@ -65,12 +64,13 @@ class Correlation {
         this.yAxis = d3.scaleLinear()
             .domain([0, d3.max(this.data[currentTeam][currentStat])])
             .range([this.height - 25, this.yAxisPadding])
-
+        //set place holder value for the y axis
         this.svg.append('g')
             .attr('id', 'y-axis')
             .attr('transform', 'translate(' + this.yAxisPadding + ',0)')
             .attr('width', 100)
             .call(d3.axisLeft(this.yAxis))
+        //set placeholder value for the y-axis label
         this.svg.select('#y-axis')
             .append('text')
             .text('Statistic')
@@ -79,6 +79,7 @@ class Correlation {
             .attr('fill', 'black')
             .attr('font-size', '14px')
             .attr('transform', 'rotate(-90)');
+        // set event listener for the display graph variable
         d3.select('#display-graph')
             .on('click', function (d) {
                 d3.select('#line').remove();
@@ -111,6 +112,7 @@ class Correlation {
             .attr('transform', 'translate(' + this.yAxisPadding + ',0)')
             .attr('width', 100)
             .call(d3.axisLeft(this.yAxis))
+        //set y-axis label
         this.svg.select('#y-axis')
             .append('text')
             .text('Statistic')
@@ -138,15 +140,5 @@ class Correlation {
                     return yax(d)
                 })
             )
-    }
-    adjust_YAxis(currentTeam, currentStat){
-        this.yAxis = d3.scaleLinear()
-            .domain([0, d3.max(this.data[currentTeam][currentStat])])
-            .range([this.height - 25, this.yAxisPadding])
-        this.yScale = d3.scaleLinear()
-            .domain([0, d3.max(this.data[`${currentTeam}`][`${currentStat}`])])
-            .range([this.height - 25, this.yAxisPadding])
-
-
     }
 }
