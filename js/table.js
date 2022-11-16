@@ -13,15 +13,9 @@ class Table{
         this.tableHeight = 500;
         this.tableWidth = 600;
 
-
-        
-
-
         // scales
         // TODO ...............
         //''''''''''''''''''
-
-
 
         this.drawTable();
     }
@@ -86,6 +80,7 @@ class Table{
         // clicking on already sorted column
         if(this.sortState.column === colName){ 
 
+            //switch sorting state and sort 
             if(this.sortState.ascending === true){
 
                 this.sortState.ascending = false;
@@ -100,6 +95,8 @@ class Table{
                 );
             }
         }
+        // clicking on new column 
+        // default sort is descending 
         else {
             this.sortState.column = colName
             this.sortState.ascending = false;

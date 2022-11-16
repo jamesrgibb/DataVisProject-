@@ -8,7 +8,7 @@ async function loadData () {
         let dataset = await d3.csv(path);
 
         // clean the imported csv data
-        cleanDataFrame(dataset, i);
+        cleanDataFrame(dataset);
 
         // Index column in cfb21 needs to be removed
         if(i == 21){
@@ -85,6 +85,8 @@ async function loadData () {
     tablediv.insert("select", "table").attr('name', "season").attr("id", "season").selectAll("option").data(seasons)
     .join("option").attr("value", d=>d).attr("selected", d=> d==="20" ? "selected": "").text(d=> "20" + d);
 
+    // add tr to thead for displaying 
+
     // attach handler to select
     d3.select("#season").on("change", changeHandler)
     // sort handler 
@@ -142,8 +144,18 @@ async function loadData () {
         d.Team = d.Team.replace(conference[0], "") // replace not inplace
         
         
-        delete d[""]
+
 
     })
 
   }
+
+  function formatYearColumn(data) {
+    // iterate through the teamMap and check each team to see if it has all  9 seasons
+    data.forEach((value, key) => {
+        if (value.length < 8) {
+            //if not remove from the teamMap
+            globalApplicationState.teamMap.delete(`${key}`)
+        }
+    });
+}
