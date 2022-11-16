@@ -1,5 +1,13 @@
 class Table{
 
+
+    // const defaultState = {
+    //     drawData: globalApplicationState.data[loadedData.length - 1],
+    //     tableData: globalApplicationState.data[loadedData.length - 1],
+    //     currentGrouping: "offense",
+    //     seasonalData: loadedData,
+
+    // }
     constructor(globalState){
 
         // determines which season and values are drawn by the table
@@ -13,6 +21,13 @@ class Table{
         this.tableWidth = 600;
 
 
+
+        let offCol = this.state.tableData.columns.filter((item)=> item.startsWith("Off"))
+        let defCol = this.state.tableData.columns.filter((item)=> item.startsWith("Def"))
+        this.columnGroups = {
+            offense: ["Team", "Win", "Loss", ...offCol],
+            defense: ["Team","Win", "Loss", ...defCol]
+        }
 
 
 
@@ -36,13 +51,36 @@ class Table{
     drawTable() {
 
         // get the data and columns to draw
-        let data = this.state.drawData
-        let columns = this.state.drawData.columns
+        // let data = this.state.drawData
+        // let columns = this.state.drawData.columns
+
+        /** TRY ROLLUP FOR SELECTED COLUMNS ONLY */
+        let columns
+        if(this.state.currentGrouping === "offense"){
+            columns = this.columnGroups.offense
+        } else if(this.state.currentGrouping === "defense"){
+            columns = this.columnGroups.defense
+        }
+
+        let data = d3.rollup(this.state.drawData, function(v){
+            let reducedMap = new Map()
+            columns.forEach(function(col){
+                reducedMap.set(col, v[0][col])
+            })
+
+            return Object.fromEntries(reducedMap)
+
+        },
+        d=> d.Team)
+
+        data = [...data.values()]
+        /** ******************************** */
+
 
         // set scales for all columns and map to col name
         // each scale will have constant domain, change range as needed
         let divScaleMap = new Map()
-        columns.slice(1).forEach(element => {
+        columns.forEach(element => {
             let scale = d3.scaleLinear().domain([
                 d3.min(data, d=>parseFloat(d[element])),
                 d3.mean(data, d=>parseFloat(d[element])),
@@ -57,7 +95,7 @@ class Table{
         let rowSelection = d3
             .select("#rankTableBody")
             .selectAll("tr")
-            .data(data)
+            .data(data) // changed for new rollup method
             .join("tr");
 
 
@@ -108,6 +146,11 @@ class Table{
         }
 
         this.drawTable();
+    }
+
+    changeGrouping(groupName){
+        this.state.currentGrouping = groupName
+        this.drawTable()
     }
 
     changeSeason(year){

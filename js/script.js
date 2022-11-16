@@ -66,8 +66,7 @@ loadData().then((loadedData) => {
     const defaultState = {
         drawData: globalApplicationState.data[loadedData.length - 1],
         tableData: globalApplicationState.data[loadedData.length - 1],
-        // seasonalData: null,
-        //defaultTableData: null,
+        currentGrouping: "offense",
         seasonalData: loadedData,
 
     }
@@ -85,14 +84,23 @@ loadData().then((loadedData) => {
 
     // initialize histogram
     globalApplicationState.histogram = new Histogram(globalApplicationState)
+
+    // add dropdown to select season 
     let seasons = ["13", "14", "15", "16", "17", "18", "19", "20"]
     let tablediv = d3.select("#table-div")
     tablediv.insert("label", "table").attr("for", "season").text("Choose Season")
     tablediv.insert("select", "table").attr('name', "season").attr("id", "season").selectAll("option").data(seasons)
         .join("option").attr("value", d => d).attr("selected", d => d === "20" ? "selected" : "").text(d => "20" + d);
 
+    // add dropdown to select column grouping 
+    tablediv.insert("label", "table").attr("for", "grouping").text("Choose Grouping")
+    tablediv.insert("select", "table").attr('name', "grouping").attr("id", "grouping").selectAll("option").data(["offense", "defense"])
+        .join("option").attr("value", d => d).text(d => d);
+
+
     // attach handler to select
-    d3.select("#season").on("change", changeHandler)
+    d3.select("#season").on("change", changeSeasonHandler)
+    d3.select("#grouping").on("change", changeGroupingHandler)
     // sort handler
     d3.select("#columnHeaders").selectAll("td").on("click", sortHandler)
     globalApplicationState.years =  [new Date('2013'), new Date('2014'), new Date('2015'), new Date('2016'), new Date('2017'), new Date('2018'), new Date('2019'), new Date('2020'), new Date('2021')]
@@ -104,7 +112,10 @@ function sortHandler(d) {
     globalApplicationState.table.sortTable(this.__data__)
 }
 
-function changeHandler(d) {
+function changeGroupingHandler(d){
+  globalApplicationState.table.changeGrouping(this.value)
+}
+function changeSeasonHandler(d) {
 
     globalApplicationState.table.changeSeason(this.value)
 }
