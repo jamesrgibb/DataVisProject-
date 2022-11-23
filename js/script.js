@@ -60,14 +60,13 @@ loadData().then((loadedData) => {
 
     // get team data across all 9 seasons into map
     globalApplicationState.teamMap = groupByTeam(loadedData);
-    formatYearColumn(globalApplicationState.teamMap)
-    globalApplicationState.chartData = parseStats(globalApplicationState.teamMap)
-
+    globalApplicationState.missingTeamData = formatYearColumn(globalApplicationState.teamMap);
+    globalApplicationState.teamMap.columns = loadedData.columns;
+    globalApplicationState.chartData = parseStats(globalApplicationState.teamMap);
     const defaultState = {
-        drawData: globalApplicationState.data[loadedData.length - 1],
-        tableData: globalApplicationState.data[loadedData.length - 1],
-        // seasonalData: null,
-        //defaultTableData: null,
+        drawData: globalApplicationState.data[loadedData.length-1],
+        tableData: globalApplicationState.data[loadedData.length-1],
+        currentGrouping: "offense",
         seasonalData: loadedData,
 
     }
@@ -85,14 +84,23 @@ loadData().then((loadedData) => {
 
     // initialize histogram
     globalApplicationState.histogram = new Histogram(globalApplicationState)
+
+    // add dropdown to select season
     let seasons = ["13", "14", "15", "16", "17", "18", "19", "20"]
     let tablediv = d3.select("#table-div")
     tablediv.insert("label", "table").attr("for", "season").text("Choose Season")
     tablediv.insert("select", "table").attr('name', "season").attr("id", "season").selectAll("option").data(seasons)
         .join("option").attr("value", d => d).attr("selected", d => d === "20" ? "selected" : "").text(d => "20" + d);
 
+    // add dropdown to select column grouping
+    tablediv.insert("label", "table").attr("for", "grouping").text("Choose Grouping")
+    tablediv.insert("select", "table").attr('name', "grouping").attr("id", "grouping").selectAll("option").data(["offense", "defense"])
+        .join("option").attr("value", d => d).text(d => d);
+
+
     // attach handler to select
-    d3.select("#season").on("change", changeHandler)
+    d3.select("#season").on("change", changeSeasonHandler)
+    d3.select("#grouping").on("change", changeGroupingHandler)
     // sort handler
     d3.select("#columnHeaders").selectAll("td").on("click", sortHandler)
     globalApplicationState.years =  [new Date('2013'), new Date('2014'), new Date('2015'), new Date('2016'), new Date('2017'), new Date('2018'), new Date('2019'), new Date('2020'), new Date('2021')]
@@ -104,7 +112,10 @@ function sortHandler(d) {
     globalApplicationState.table.sortTable(this.__data__)
 }
 
-function changeHandler(d) {
+function changeGroupingHandler(d){
+    globalApplicationState.table.changeGrouping(this.value)
+}
+function changeSeasonHandler(d) {
 
     globalApplicationState.table.changeSeason(this.value)
 }
@@ -154,12 +165,15 @@ function cleanDataFrame(data) {
 
 function formatYearColumn(data) {
     // iterate through the teamMap and check each team to see if it has all  9 seasons
+    let missing = []
     data.forEach((value, key) => {
         if (value.length < 8) {
             //if not remove from the teamMap
+            missing.push(key)
             globalApplicationState.teamMap.delete(`${key}`)
         }
     });
+    return missing
 }
 
 function parseStats(data) {
@@ -167,8 +181,8 @@ function parseStats(data) {
     const teamStats = {}
     data.forEach(function (team) {
         teamStats[team[0][0].Team] = {}
-        const wins = []
-        const losses = []
+        const Win = []
+        const Loss = []
         const games = []
         const off_rank = []
         const off_plays = []
@@ -212,8 +226,8 @@ function parseStats(data) {
         const redzone_scores = []
 
         team.forEach(function (year) {
-            wins.push(parseInt(year[0].Win))
-            losses.push(parseInt(year[0].Loss))
+            Win.push(parseInt(year[0].Win))
+            Loss.push(parseInt(year[0].Loss))
             games.push(parseInt(year[0].Games))
             off_rank.push(parseInt(year[0]['Off.Rank']))
             off_plays.push(parseInt(year[0]['Off.Plays']))
@@ -257,8 +271,8 @@ function parseStats(data) {
             opp_pass_tds_allowed.push(parseInt(year[0]['Opp.Pass.TDs.Allowed']))
 
         })
-        teamStats[team[0][0].Team].wins = wins
-        teamStats[team[0][0].Team].losses = losses
+        teamStats[team[0][0].Team].win = Win
+        teamStats[team[0][0].Team].loss = Loss
         teamStats[team[0][0].Team].games = games
         teamStats[team[0][0].Team].off_rank = off_rank
         teamStats[team[0][0].Team].off_plays = off_plays

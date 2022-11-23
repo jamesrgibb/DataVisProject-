@@ -1,5 +1,13 @@
 class Table{
 
+
+    // const defaultState = {
+    //     drawData: globalApplicationState.data[loadedData.length - 1],
+    //     tableData: globalApplicationState.data[loadedData.length - 1],
+    //     currentGrouping: "offense",
+    //     seasonalData: loadedData,
+
+    // }
     constructor(globalState){
 
         // determines which season and values are drawn by the table
@@ -13,6 +21,13 @@ class Table{
         this.tableWidth = 600;
 
 
+
+        let offCol = this.state.tableData.columns.filter((item)=> item.startsWith("Off") || item.match(/Pass.Yards/))
+        let defCol = this.state.tableData.columns.filter((item)=> item.startsWith("Def") || item.match(/Allowed/))
+        this.columnGroups = {
+            offense: ["Team", "Win", "Loss", ...offCol],
+            defense: ["Team","Win", "Loss", ...defCol]
+        }
 
 
 
@@ -36,18 +51,42 @@ class Table{
     drawTable() {
 
         // get the data and columns to draw
-        let data = this.state.drawData
-        let columns = this.state.drawData.columns
+        // let data = this.state.drawData
+        // let columns = this.state.drawData.columns
 
-        // set scales for all columns and map to col name
-        // each scale will have constant domain, change range as needed
+        /** TRY ROLLUP FOR SELECTED COLUMNS ONLY */
+        let columns
+        if(this.state.currentGrouping === "offense"){
+            columns = this.columnGroups.offense
+        } else if(this.state.currentGrouping === "defense"){
+            columns = this.columnGroups.defense
+        }
+
+        let data = d3.rollup(this.state.drawData, function(v){
+                let reducedMap = new Map()
+                columns.forEach(function(col){
+                    reducedMap.set(col, v[0][col])
+                })
+
+                return Object.fromEntries(reducedMap)
+            },
+                d => d.Team
+            )
+        data = [...data.values()]
+        data = data.filter(d=>!globalApplicationState.missingTeamData.includes(d.Team))
+        console.log(data.length)
+        /** ******************************** */
+
+
+            // set scales for all columns and map to col name
+            // each scale will have constant domain, change range as needed
         let divScaleMap = new Map()
-        columns.slice(1).forEach(element => {
+        columns.forEach(element => {
             let scale = d3.scaleLinear().domain([
                 d3.min(data, d=>parseFloat(d[element])),
                 d3.mean(data, d=>parseFloat(d[element])),
                 d3.max(data, d=>parseFloat(d[element]))
-            ]).range(["#FF3131", "white", "#50C878"])
+            ]).range(["#ff1c1c", "white", "#58c850"])
             divScaleMap.set(element, scale)
         });
 
@@ -57,18 +96,40 @@ class Table{
         let rowSelection = d3
             .select("#rankTableBody")
             .selectAll("tr")
-            .data(data)
+            .data(data) // changed for new rollup method
             .join("tr");
 
 
         let cells = rowSelection.selectAll('td')
             .data(function (row) {
                 return columns.map(function (column) {
-                    return {column: column, value: row[column]};
+                        return {column: column, value: row[column], team: row.Team};
                 });
             })
             .join('td')
             .text(function (d) { return d.value; })
+            .attr('id', function (d) {
+                if(d.column === "Team"){
+                    return d.team
+                }
+                else{
+                    return d.team + " " + d.column
+                }
+            })
+            .on('click', function(d){
+                let col = d['path'][0].__data__.column
+                let team = d['path'][0].__data__.team
+                console.log(d['path'])
+
+                d3.select('#line').remove();
+                d3.select('#y-axis').remove();
+                globalApplicationState.correlation = new Correlation(globalApplicationState)
+                d3.select('#line').remove();
+                d3.select('#y-axis').remove();
+                let newCol = col.toLowerCase()
+                col = newCol.replace(".","_")
+                globalApplicationState.correlation.chartSetup(team,col)
+            })
             .style('background-color', function(d){
                 if(d.column === "Team"){
                     return "white"
@@ -78,6 +139,7 @@ class Table{
                     return color
                 }
             });
+
 
     }
 
@@ -110,6 +172,11 @@ class Table{
         this.drawTable();
     }
 
+    changeGrouping(groupName){
+        this.state.currentGrouping = groupName
+        this.drawTable()
+    }
+
     changeSeason(year){
         let index = year -13;
 
@@ -120,5 +187,7 @@ class Table{
         this.drawTable()
 
     }
+
+
 
 }

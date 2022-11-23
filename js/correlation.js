@@ -12,7 +12,7 @@ class Correlation {
         this.animationDuration = 250;
         this.columns = this.state.table.state.drawData.columns
         this.data = this.state.chartData
-        console.log(this.data)
+        // console.log(this.data)
         this.Team = this.state.table.state.drawData
         this.allSelected = [];
         this.yScale = null;
@@ -21,7 +21,7 @@ class Correlation {
         this.yAxis = null;
         // set up svg element
         let currentTeam = 'Akron';
-        let currentStat = 'wins';
+        let currentStat = 'win';
         const teams = Object.keys(this.data)
         const stats = Object.keys(this.data.Akron)
         //set up width and height
@@ -61,6 +61,14 @@ class Correlation {
             .attr('id', 'xAxis')
             .call(d3.axisBottom(this.xAxis))
             .attr('height', 30)
+        this.svg
+            .select('#xAxis')
+            .append('text')
+            .attr('x', 150)
+            .attr('y', 30)
+            .text('Years')
+            .style('font-size', '14px')
+            .attr('fill', 'black')
         //set up the y axis
         this.yAxis = d3.scaleLinear()
             .domain([0, d3.max(this.data[currentTeam][currentStat])])
@@ -80,14 +88,7 @@ class Correlation {
             .attr('fill', 'black')
             .attr('font-size', '14px')
             .attr('transform', 'rotate(-90)');
-        this.svg
-            .select('#xAxis')
-            .append('text')
-            .attr('x', 150)
-            .attr('y', 30)
-            .text('Years')
-            .style('font-size', '14px')
-            .attr('fill', 'black')
+
         // set event listener for the display graph variable
         d3.select('#display-graph')
             .on('click', function (d) {
@@ -100,13 +101,16 @@ class Correlation {
 
     chartSetup(currentTeam,currentStat) {
         //get stats and team values
-
+        console.log(currentTeam)
+        console.log(currentStat)
+        // console.log(globalApplicationState.correlation.data[currentTeam][currentStat])
         const teams = Object.keys(this.data)
         const stats = Object.keys(this.data.Akron)
-        // load values into the dropdown menus
         const xax = this.xAxis
+        const maxValue = this.data[currentTeam][currentStat];
+
         this.yAxis = d3.scaleLinear()
-            .domain([0, d3.max(this.data[currentTeam][currentStat])])
+            .domain([0, d3.max( maxValue)])
             .range([this.height - 25, this.yAxisPadding])
         //set tick interval
         this.svg.append('g')
