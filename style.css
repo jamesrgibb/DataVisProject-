@@ -19,7 +19,9 @@ th {
     background: rgb(248, 248, 248);
 }
 
-
+.view1{
+    display: inline-block;
+}
 
 td {
     text-align: center;
@@ -28,6 +30,9 @@ td {
     padding-right: 5px;
     padding-left: 5px;
     color:black;
+    width: max-content;
+
+
 }
 
 td:first-of-type
@@ -47,6 +52,10 @@ table > .label{
     text-anchor: middle;
 }
 
+#columnHeaders{
+    cursor: pointer;
+
+}
 @font-face {
     font-family: 'font1';
     src: url('assets/font1.ttf');

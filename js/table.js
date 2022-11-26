@@ -1,13 +1,4 @@
 class Table{
-
-
-    // const defaultState = {
-    //     drawData: globalApplicationState.data[loadedData.length - 1],
-    //     tableData: globalApplicationState.data[loadedData.length - 1],
-    //     currentGrouping: "offense",
-    //     seasonalData: loadedData,
-
-    // }
     constructor(globalState){
 
         // determines which season and values are drawn by the table
@@ -23,7 +14,19 @@ class Table{
 
 
         let offCol = this.state.tableData.columns.filter((item)=> item.startsWith("Off") || item.match(/Pass.Yards/))
-        let defCol = this.state.tableData.columns.filter((item)=> item.startsWith("Def") || item.match(/Allowed/))
+        let defCol = this.state.tableData.columns.filter((item)=>item.startsWith("Def") || item.match(/Allowed/))
+        defCol.splice(7,1)
+        defCol.splice(7,1)
+        defCol.splice(13,1)
+        defCol.splice(13,1)
+        defCol.splice(20,1)
+        defCol.splice(13,1)
+        defCol.splice(13,1)
+        defCol.splice(13,1)
+        defCol.splice(19,1)
+
+
+        console.log(defCol)
         this.columnGroups = {
             offense: ["Team", "Win", "Loss", ...offCol],
             defense: ["Team","Win", "Loss", ...defCol]
@@ -44,8 +47,14 @@ class Table{
     /** Called to update the columns when switching out table data  */
     setColumns (array) {
         let headers = d3.select("#columnHeaders");
-        headers.selectAll('td').data(array).join('td').text(d=>d)
-
+        headers.selectAll('td')
+            .data(array)
+            .join('td').text(d=>{
+            return d.replaceAll('.', ' ')
+        })
+        headers.selectAll('td').style('font-size','11px')
+        headers.selectAll('td').style('text-align','center')
+        headers.attr('width',50)
     }
 
     drawTable() {
@@ -74,7 +83,7 @@ class Table{
             )
         data = [...data.values()]
         data = data.filter(d=>!globalApplicationState.missingTeamData.includes(d.Team))
-        console.log(data.length)
+
         /** ******************************** */
 
 
@@ -97,7 +106,7 @@ class Table{
             .select("#rankTableBody")
             .selectAll("tr")
             .data(data) // changed for new rollup method
-            .join("tr");
+            .join("tr")
 
 
         let cells = rowSelection.selectAll('td')
@@ -116,6 +125,8 @@ class Table{
                     return d.team + " " + d.column
                 }
             })
+            //TODO: move the defensive and offense selection out of the chart scrolling
+
             .on('click', function(d){
                 let col = d['path'][0].__data__.column
                 let team = d['path'][0].__data__.team
@@ -123,11 +134,13 @@ class Table{
 
                 d3.select('#line').remove();
                 d3.select('#y-axis').remove();
+                d3.select('#y-axis').text('');
                 globalApplicationState.correlation = new Correlation(globalApplicationState)
                 d3.select('#line').remove();
+                d3.select('#y-axis').text('');
                 d3.select('#y-axis').remove();
                 let newCol = col.toLowerCase()
-                col = newCol.replace(".","_")
+                col = newCol.replaceAll(".","_")
                 globalApplicationState.correlation.chartSetup(team,col)
             })
             .style('background-color', function(d){
@@ -139,7 +152,6 @@ class Table{
                     return color
                 }
             });
-
 
     }
 
