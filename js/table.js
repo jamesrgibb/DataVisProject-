@@ -24,9 +24,10 @@ class Table{
         defCol.splice(13,1)
         defCol.splice(13,1)
         defCol.splice(19,1)
-
-
-        console.log(defCol)
+        this.descendingOff = ['Loss', 'Off.Rank','Def.Rank', 'Pass.Yards.Per.Game.Allowed', 'Def.Rank', 'Def.Plays', 'Yards.Allowed','Yards.Play.Allowed',
+            'Off.TDs.Allowed','Total.TDs.Allowed','Yards.Per.Game.Allowed', 'Opp.Completions.Allowed', 'Opp.Pass.Yds.Allowed', 'Opp.Pass.TDs.Allowed','Yards.Attempt.Allowed',
+            'Yards.Completion.Allowed', 'Pass.Yards.Per.Game.Allowed', 'Yds.Rush.Allowed','Opp.Rush.Touchdowns.Allowed', 'Rush.Yards.Per.Game.Allowed','Touchdowns.Allowed',
+        'Points.Allowed','Avg.Points.per.Game.Allowed']
         this.columnGroups = {
             offense: ["Team", "Win", "Loss", ...offCol],
             defense: ["Team","Win", "Loss", ...defCol]
@@ -86,18 +87,27 @@ class Table{
 
         /** ******************************** */
 
-
+        let divScaleMap = new Map();
             // set scales for all columns and map to col name
-            // each scale will have constant domain, change range as needed
-        let divScaleMap = new Map()
+            // each scale will have constant domain, change range as needed\
+
         columns.forEach(element => {
-            let scale = d3.scaleLinear().domain([
-                d3.min(data, d=>parseFloat(d[element])),
-                d3.mean(data, d=>parseFloat(d[element])),
-                d3.max(data, d=>parseFloat(d[element]))
-            ]).range(["#ff1c1c", "white", "#58c850"])
-            divScaleMap.set(element, scale)
-        });
+            console.log(element)
+            if (!this.descendingOff.includes(element)) {
+                let scale = d3.scaleLinear().domain([
+                    d3.min(data, d => parseFloat(d[element])),
+                    d3.mean(data, d => parseFloat(d[element])),
+                    d3.max(data, d => parseFloat(d[element]))
+                ]).range(["#ff1c1c", "white", "#58c850"])
+                divScaleMap.set(element, scale)
+            } else{
+                let scale = d3.scaleLinear().domain([
+                    d3.min(data, d => parseFloat(d[element])),
+                    d3.mean(data, d => parseFloat(d[element])),
+                    d3.max(data, d => parseFloat(d[element]))
+                ]).range([ "#58c850", "white", "#ff1c1c"])
+                divScaleMap.set(element, scale)
+            }})
 
         // set the table column vals
         this.setColumns(columns)
