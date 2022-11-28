@@ -60,12 +60,13 @@ loadData().then((loadedData) => {
 
     // get team data across all 9 seasons into map
     globalApplicationState.teamMap = groupByTeam(loadedData);
-    formatYearColumn(globalApplicationState.teamMap)
-    globalApplicationState.chartData = parseStats(globalApplicationState.teamMap)
-
+    globalApplicationState.missingTeamData = formatYearColumn(globalApplicationState.teamMap);
+    globalApplicationState.missingStats = ['Opp.Kickoff.Return.Touchdowns.Allowed',];
+    globalApplicationState.teamMap.columns = loadedData.columns;
+    globalApplicationState.chartData = parseStats(globalApplicationState.teamMap);
     const defaultState = {
-        drawData: globalApplicationState.data[loadedData.length - 1],
-        tableData: globalApplicationState.data[loadedData.length - 1],
+        drawData: globalApplicationState.data[loadedData.length-1],
+        tableData: globalApplicationState.data[loadedData.length-1],
         currentGrouping: "offense",
         seasonalData: loadedData,
 
@@ -85,18 +86,18 @@ loadData().then((loadedData) => {
     // initialize histogram
     globalApplicationState.histogram = new Histogram(globalApplicationState)
 
-    // add dropdown to select season 
+    // add dropdown to select season
     let seasons = ["13", "14", "15", "16", "17", "18", "19", "20"]
     let tablediv = d3.select("#table-div")
-    tablediv.insert("label", "table").attr("for", "season").text("Choose Season")
+    tablediv.insert("label", "table").attr("for", "season").text("Choose Season:")
     tablediv.insert("select", "table").attr('name', "season").attr("id", "season").selectAll("option").data(seasons)
         .join("option").attr("value", d => d).attr("selected", d => d === "20" ? "selected" : "").text(d => "20" + d);
 
-    // add dropdown to select column grouping 
-    tablediv.insert("label", "table").attr("for", "grouping").text("Choose Grouping")
+    // add dropdown to select column grouping
+    tablediv.insert("label", "table").attr("for", "grouping").text("Choose Grouping:")
     tablediv.insert("select", "table").attr('name', "grouping").attr("id", "grouping").selectAll("option").data(["offense", "defense"])
         .join("option").attr("value", d => d).text(d => d);
-
+    tablediv.selectAll("label").style('margin','10px')
 
     // attach handler to select
     d3.select("#season").on("change", changeSeasonHandler)
@@ -113,14 +114,22 @@ function sortHandler(d) {
 }
 
 function changeGroupingHandler(d){
-  globalApplicationState.table.changeGrouping(this.value)
+    globalApplicationState.table.changeGrouping(this.value)
 }
 function changeSeasonHandler(d) {
 
     globalApplicationState.table.changeSeason(this.value)
 }
 
+function filterStats(d) {
+    d.forEach(function (year){
+        year.forEach(function (stats) {
+            delete stats['Kickoff.Return.Touchdowns']
 
+        })
+    })
+
+}
 function groupByTeam(array) {
 
 
@@ -165,12 +174,15 @@ function cleanDataFrame(data) {
 
 function formatYearColumn(data) {
     // iterate through the teamMap and check each team to see if it has all  9 seasons
+    let missing = []
     data.forEach((value, key) => {
         if (value.length < 8) {
             //if not remove from the teamMap
+            missing.push(key)
             globalApplicationState.teamMap.delete(`${key}`)
         }
     });
+    return missing
 }
 
 function parseStats(data) {
@@ -178,31 +190,30 @@ function parseStats(data) {
     const teamStats = {}
     data.forEach(function (team) {
         teamStats[team[0][0].Team] = {}
-        const wins = []
-        const losses = []
+        const Win = []
+        const Loss = []
         const games = []
         const off_rank = []
         const off_plays = []
         const off_yards = []
         const off_yards_play = []
-        const off_yards_game = []
-        const off_TD = []
+        const off_yards_per_game = []
+        const off_tds = []
         const def_rank = []
-        const def_yards_allowed = []
+        const yards_allowed = []
         const def_plays = []
-        const def_yards_allowed_play = []
-        const def_yards_allowed_game = []
+        const yards_play_allowed = []
+        const yards_per_game_allowed = []
         const def_TD_allowed_Total = []
         const first_dwn_rank = []
         const def_first_dwn_rank = []
         const pass_off_rank = []
         const pass_attempts = []
         const pass_complete = []
+        const pass_yards = []
         const interceptions = []
         const pass_tds = []
         const pass_def_rank = []
-        const opp_completetions_allwd = []
-        const opp_pass_yds_allowed = []
         const opp_pass_tds_allowed = []
         const redzone_off_rank = []
         const redzone_points = []
@@ -215,27 +226,41 @@ function parseStats(data) {
         const rush_yards_game = []
         const rush_def_rank = []
         const rush_yards_allowed = []
-        const rush_yards_allowed_play = []
-        const rush_yards_allowed_game = []
-        const rush_TD_allowed_Total = []
+        const yds_rush_allowed = []
+        const rush_yards_allowed_per_game = []
+        const opp_rush_touchdowns_allowed = []
         const sack_rank = []
         const sack_total = []
-        const redzone_scores = []
+        const off_tds_allowed = []
+        const pass_yards_attempt = []
+        const yards_attempt_allowed = []
+        const pass_yards_per_game = []
+        const opp_pass_yds_allowed = []
+        const total_tds_allowed = []
+        const opp_completions_allowed = []
+        const yards_completion_allowed = []
+        const pass_yards_per_game_allowed = []
+        const avg_points_per_game_allowed = []
+        const points_allowed = []
+        const rush_yards_per_game_allowed = []
+        const touchdowns_allowed = []
+
+
 
         team.forEach(function (year) {
-            wins.push(parseInt(year[0].Win))
-            losses.push(parseInt(year[0].Loss))
+            Win.push(parseInt(year[0].Win))
+            Loss.push(parseInt(year[0].Loss))
             games.push(parseInt(year[0].Games))
             off_rank.push(parseInt(year[0]['Off.Rank']))
             off_plays.push(parseInt(year[0]['Off.Plays']))
             off_yards.push(parseInt(year[0]['Off.Yards']))
             off_yards_play.push(parseInt(year[0]["Off.Yards.Play"]))
-            off_yards_game.push(parseInt(year[0]["Off.Yards.per.Game"]))
-            off_TD.push(parseInt(year[0]['Off.TDs']))
+            off_yards_per_game.push(parseInt(year[0]["Off.Yards.per.Game"]))
+            off_tds.push(parseInt(year[0]['Off.TDs']))
             def_rank.push(parseInt(year[0]['Def.Rank']))
-            def_yards_allowed_game.push(parseInt(year[0]["Yards.Per.Game.Allowed"]))
-            def_yards_allowed_play.push(parseInt(year[0]["Yards.Play.Allowed"]))
-            def_yards_allowed.push(parseInt(year[0]["Yards.Allowed"]))
+            yards_per_game_allowed.push(parseInt(year[0]["Yards.Per.Game.Allowed"]))
+            yards_play_allowed.push(parseInt(year[0]["Yards.Play.Allowed"]))
+            yards_allowed.push(parseInt(year[0]["Yards.Allowed"]))
             def_plays.push(parseInt(year[0]["Def.Plays"]))
             def_TD_allowed_Total.push(parseInt(year[0]["Total.TDs.Allowed"]))
             first_dwn_rank.push(parseInt(year[0]['First.Down.Rank']))
@@ -246,8 +271,7 @@ function parseStats(data) {
             interceptions.push(parseInt(year[0]['Interceptions.Thrown.x']))
             pass_tds.push(parseInt(year[0]['Pass.Touchdowns']))
             pass_def_rank.push(parseInt(year[0]['Pass.Def.Rank']))
-            opp_completetions_allwd.push(parseInt(year[0]['Opp.Completions.Allowed']))
-            opp_pass_yds_allowed.push(parseInt(year[0]['Opp.Pass.Yds.Allowed']))
+            opp_completions_allowed.push(parseInt(year[0]['Opp.Completions.Allowed']))
             redzone_off_rank.push(parseInt(year[0]['Redzone.Off.Rank']))
             redzone_points.push(parseInt(year[0]['Redzone.Scores']))
             redzone_def_rank.push(parseInt(year[0]['Redzone.Def.Rank']))
@@ -257,41 +281,53 @@ function parseStats(data) {
             rush_yards.push(parseInt(year[0]['Rush.Yds']))
             rush_yards_play.push(parseInt(year[0]['Yards.Rush']))
             rush_yards_game.push(parseInt(year[0]['Rushing.Yards.per.Game']))
-            rush_yards_allowed_play.push(parseInt(year[0]['Yds.Rush.Allowed']))
-            rush_yards_allowed_game.push(parseInt(year[0]['Rush.Yards.Per.Game.Allowed']))
+            yds_rush_allowed.push(parseInt(year[0]['Yds.Rush.Allowed']))
+            rush_yards_allowed_per_game.push(parseInt(year[0]['Rush.Yards.Per.Game.Allowed']))
             rush_def_rank.push(parseInt(year[0]['Rushing.Def.Rank']))
-            rush_TD_allowed_Total.push(parseInt(year[0]['Opp.Rush.Touchdowns.Allowed']))
+            opp_rush_touchdowns_allowed.push(parseInt(year[0]['Opp.Rush.Touchdowns.Allowed']))
             rush_yards_allowed.push(parseInt(year[0]['Opp.Rush.Yards.Alloweed']))
-
+            off_tds_allowed.push(parseInt(year[0]['Off.TDs.Allowed']))
             sack_total.push(parseInt(year[0]['Sacks']))
             sack_rank.push(parseInt(year[0]['Sack.Rank']))
             opp_pass_tds_allowed.push(parseInt(year[0]['Opp.Pass.TDs.Allowed']))
+            pass_yards.push(parseInt(year[0]['Pass.Yards']))
+            pass_yards_attempt.push(parseInt(year[0]['Pass.Yards.Attempt']))
+            pass_yards_per_game.push(parseInt(year[0]['Pass.Yards.Per.Game']))
+            opp_pass_yds_allowed.push(parseInt(year[0]['Opp.Pass.Yds.Allowed']))
+            total_tds_allowed.push(parseInt(year[0]['Total.TDs.Allowed']))
+            yards_attempt_allowed.push(parseInt(year[0]['Yards.Attempt.Allowed']))
+            yards_completion_allowed.push(parseInt(year[0]['Yards.Completion.Allowed']))
+            pass_yards_per_game_allowed.push(parseInt(year[0]['Pass.Yards.Per.Game.Allowed']))
+            avg_points_per_game_allowed.push(parseInt(year[0]['Avg.Points.per.Game.Allowed']))
+            points_allowed.push(parseInt(year[0]['Points.Allowed']))
+            rush_yards_per_game_allowed.push(parseInt(year[0]['Rush.Yards.Per.Game.Allowed']))
+            touchdowns_allowed.push(parseInt(year[0]['Touchdowns.Allowed']))
+
 
         })
-        teamStats[team[0][0].Team].wins = wins
-        teamStats[team[0][0].Team].losses = losses
+        teamStats[team[0][0].Team].win = Win
+        teamStats[team[0][0].Team].loss = Loss
         teamStats[team[0][0].Team].games = games
         teamStats[team[0][0].Team].off_rank = off_rank
         teamStats[team[0][0].Team].off_plays = off_plays
         teamStats[team[0][0].Team].off_yards = off_yards
         teamStats[team[0][0].Team].off_yards_play = off_yards_play
-        teamStats[team[0][0].Team].off_yards_game = off_yards_game
-        teamStats[team[0][0].Team].off_TD = off_TD
+        teamStats[team[0][0].Team].off_yards_per_game = off_yards_per_game
+        teamStats[team[0][0].Team].off_tds = off_tds
         teamStats[team[0][0].Team].def_rank = def_rank
-        teamStats[team[0][0].Team].def_yards_allowed = def_yards_allowed
-        teamStats[team[0][0].Team].def_yards_allowed_play = def_yards_allowed_play
-        teamStats[team[0][0].Team].def_yards_allowed_game = def_yards_allowed_game
+        teamStats[team[0][0].Team].yards_allowed = yards_allowed
+        teamStats[team[0][0].Team].yards_play_allowed = yards_play_allowed
+        teamStats[team[0][0].Team].yards_per_game_allowed = yards_per_game_allowed
         teamStats[team[0][0].Team].def_TD_allowed_Total = def_TD_allowed_Total
         teamStats[team[0][0].Team].first_dwn_rank = first_dwn_rank
         teamStats[team[0][0].Team].pass_off_rank = pass_off_rank
         teamStats[team[0][0].Team].pass_def_rank = pass_def_rank
-        teamStats[team[0][0].Team].opp_pass_yds_allowed = opp_pass_yds_allowed
         teamStats[team[0][0].Team].pass_attempts = pass_attempts
         teamStats[team[0][0].Team].pass_complete = pass_complete
         teamStats[team[0][0].Team].interceptions = interceptions
         teamStats[team[0][0].Team].pass_tds = pass_tds
         teamStats[team[0][0].Team].opp_pass_yds_allowed = opp_pass_yds_allowed
-        teamStats[team[0][0].Team].opp_completetions_allwd = opp_completetions_allwd
+        teamStats[team[0][0].Team].opp_completions_allowed = opp_completions_allowed
         teamStats[team[0][0].Team].redzone_off_rank = redzone_off_rank
         teamStats[team[0][0].Team].redzone_points = redzone_points
         teamStats[team[0][0].Team].redzone_def_rank = redzone_def_rank
@@ -302,14 +338,26 @@ function parseStats(data) {
         teamStats[team[0][0].Team].rush_off_rank = rush_off_rank
         teamStats[team[0][0].Team].rush_yards_play = rush_yards_play
         teamStats[team[0][0].Team].rush_yards_game = rush_yards_game
-        teamStats[team[0][0].Team].rush_yards_allowed_play = rush_yards_allowed_play
-        teamStats[team[0][0].Team].rush_yards_allowed_game = rush_yards_allowed_game
+        teamStats[team[0][0].Team].yds_rush_allowed = yds_rush_allowed
+        teamStats[team[0][0].Team].rush_yards_allowed_per_game = rush_yards_allowed_per_game
         teamStats[team[0][0].Team].rush_def_rank = rush_def_rank
-        teamStats[team[0][0].Team].rush_TD_allowed_Total = rush_TD_allowed_Total
+        teamStats[team[0][0].Team].opp_rush_touchdowns_allowed = opp_rush_touchdowns_allowed
         teamStats[team[0][0].Team].sack_rank = sack_rank
         teamStats[team[0][0].Team].sack_total = sack_total
         teamStats[team[0][0].Team].opp_pass_tds_allowed = opp_pass_tds_allowed
-
+        teamStats[team[0][0].Team].off_tds_allowed = off_tds_allowed
+        teamStats[team[0][0].Team].pass_yards = pass_yards
+        teamStats[team[0][0].Team].pass_yards_attempt = pass_yards_attempt
+        teamStats[team[0][0].Team].pass_yards_per_game = pass_yards_per_game
+        teamStats[team[0][0].Team].def_plays = def_plays
+        teamStats[team[0][0].Team].total_tds_allowed = total_tds_allowed
+        teamStats[team[0][0].Team].yards_attempt_allowed = yards_attempt_allowed
+        teamStats[team[0][0].Team].yards_completion_allowed = yards_completion_allowed
+        teamStats[team[0][0].Team].pass_yards_per_game_allowed =pass_yards_per_game_allowed
+        teamStats[team[0][0].Team].avg_points_per_game_allowed = avg_points_per_game_allowed
+        teamStats[team[0][0].Team].points_allowed = points_allowed
+        teamStats[team[0][0].Team].rush_yards_per_game_allowed =rush_yards_per_game_allowed
+        teamStats[team[0][0].Team].touchdowns_allowed = touchdowns_allowed
 
     })
     return teamStats

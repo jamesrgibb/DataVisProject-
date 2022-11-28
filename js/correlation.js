@@ -12,45 +12,24 @@ class Correlation {
         this.animationDuration = 250;
         this.columns = this.state.table.state.drawData.columns
         this.data = this.state.chartData
-        console.log(this.data)
         this.Team = this.state.table.state.drawData
         this.allSelected = [];
         this.yScale = null;
         this.xScale = null;
         this.xAxis = null;
         this.yAxis = null;
+
         // set up svg element
         let currentTeam = 'Akron';
-        let currentStat = 'wins';
+        let currentStat = 'win';
         const teams = Object.keys(this.data)
         const stats = Object.keys(this.data.Akron)
+
         //set up width and height
         this.svg
             .attr('width', this.width + this.margin.left + this.margin.right)
             .attr('height', this.height + this.margin.top + this.margin.bottom)
 
-        d3.select('#selectTeam')
-            .selectAll('myOptions')
-            .data(teams)
-            .enter()
-            .append('option')
-            .text(function (d) {
-                return d;
-            })
-            .attr('value', function (d) {
-                return d;
-            })
-        d3.select('#Y-Statistic')
-            .selectAll('myOptions')
-            .data(stats)
-            .enter()
-            .append('option')
-            .text(function (d) {
-                return d.replaceAll('_', ' ');
-            })
-            .attr('value', function (d) {
-                return d;
-            })
         //set up xAxis
         this.xAxis = d3.scaleTime()
             .domain(d3.extent(this.years))
@@ -61,6 +40,15 @@ class Correlation {
             .attr('id', 'xAxis')
             .call(d3.axisBottom(this.xAxis))
             .attr('height', 30)
+        this.svg
+            .select('#xAxis')
+            .append('text')
+            .attr('x', 150)
+            .attr('y', 30)
+            .text('Years')
+            .style('font-size', '14px')
+            .attr('fill', 'black')
+
         //set up the y axis
         this.yAxis = d3.scaleLinear()
             .domain([0, d3.max(this.data[currentTeam][currentStat])])
@@ -74,20 +62,11 @@ class Correlation {
         //set placeholder value for the y-axis label
         this.svg.select('#y-axis')
             .append('text')
-            .text('Statistic')
             .attr('x', -200)
             .attr('y', -40)
             .attr('fill', 'black')
             .attr('font-size', '14px')
             .attr('transform', 'rotate(-90)');
-        this.svg
-            .select('#xAxis')
-            .append('text')
-            .attr('x', 150)
-            .attr('y', 30)
-            .text('Years')
-            .style('font-size', '14px')
-            .attr('fill', 'black')
         // set event listener for the display graph variable
         d3.select('#display-graph')
             .on('click', function (d) {
@@ -100,39 +79,49 @@ class Correlation {
 
     chartSetup(currentTeam,currentStat) {
         //get stats and team values
-
         const teams = Object.keys(this.data)
         const stats = Object.keys(this.data.Akron)
-        // load values into the dropdown menus
         const xax = this.xAxis
+        const maxValue = this.data[currentTeam][currentStat];
+
         this.yAxis = d3.scaleLinear()
-            .domain([0, d3.max(this.data[currentTeam][currentStat])])
+            .domain([0, d3.max( maxValue)])
             .range([this.height - 25, this.yAxisPadding])
+
         //set tick interval
         this.svg.append('g')
             .attr('id', 'y-axis')
             .attr('transform', 'translate(' + this.yAxisPadding + ',0)')
             .attr('width', 100)
             .call(d3.axisLeft(this.yAxis))
+
         //set y-axis label
-        this.svg.select('#y-axis')
+        let yLabel = this.svg.select('#y-axis')
             .append('text')
-            .text('Statistic')
-            .attr('x', -200)
+            .text(function () {
+                let yTitle = currentStat.replaceAll('_', ' ')
+                yTitle = yTitle.toUpperCase()
+                return yTitle
+            })
             .attr('y', -40)
+            .attr('x', -200)
             .attr('fill', 'black')
             .attr('font-size', '14px')
-            .attr('transform', 'rotate(-90)');
+            .attr('transform', 'rotate(-90)')
+            .style('text-anchor', "middle");
+
         let teamColor = d3.scaleOrdinal(d3.schemeTableau10).domain(teams);
+
         //set up the yAxis
         const yax = this.yAxis
+
         // create the line for the data
         const line = this.svg.append('g')
             .append('path')
             .attr('id', 'line')
             .datum(this.data[`${currentTeam}`][`${currentStat}`])
             .attr('fill', 'none')
-            .attr('stroke', teamColor('Akron'))
+            .attr('stroke', teamColor(currentTeam))
             .attr('stroke-width', 1)
             .attr('d', d3.line()
                 .x(function (d, i) {
@@ -141,6 +130,9 @@ class Correlation {
                 .y(function (d) {
                     return yax(d)
                 })
+
             )
+
+
     }
 }
