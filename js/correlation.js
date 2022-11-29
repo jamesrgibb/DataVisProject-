@@ -1,5 +1,6 @@
 class Correlation {
     constructor(globalState) {
+
         //Create a new Correlation with the given data
         this.state = globalState;
         this.svg = d3.select('#chart-svg');
@@ -16,7 +17,6 @@ class Correlation {
         this.allSelected = [];
         this.yScale = null;
         this.xScale = null;
-        this.xAxis = null;
         this.yAxis = null;
 
         // set up svg element
@@ -40,6 +40,7 @@ class Correlation {
             .attr('id', 'xAxis')
             .call(d3.axisBottom(this.xAxis))
             .attr('height', 30)
+
         this.svg
             .select('#xAxis')
             .append('text')
@@ -53,6 +54,7 @@ class Correlation {
         this.yAxis = d3.scaleLinear()
             .domain([0, d3.max(this.data[currentTeam][currentStat])])
             .range([this.height - 25, this.yAxisPadding])
+
         //set place holder value for the y axis
         this.svg.append('g')
             .attr('id', 'y-axis')
@@ -85,7 +87,7 @@ class Correlation {
         const maxValue = this.data[currentTeam][currentStat];
 
         this.yAxis = d3.scaleLinear()
-            .domain([0, d3.max( maxValue)])
+            .domain([0, d3.max(maxValue)])
             .range([this.height - 25, this.yAxisPadding])
 
         //set tick interval
@@ -123,15 +125,26 @@ class Correlation {
             .attr('fill', 'none')
             .attr('stroke', teamColor(currentTeam))
             .attr('stroke-width', 1)
-            .attr('d', d3.line()
-                .x(function (d, i) {
-                    return xax(globalApplicationState.years[i]);
-                })
-                .y(function (d) {
-                    return yax(d)
-                })
+            .attr('d', (list) => {
+                    return d3.line()
+                        .x(function (d, i, c) {
+                            return xax(globalApplicationState.years[i]);
+                        })
+                        .y(function (d, i, c) {
+                            return yax(d)
+                        })
 
-            )
+                (list)
+                })
+            .text(function (d, i, c) {
+                return d
+            })
+        let myText =  svg.append("text")
+            .attr("y", height - 10)//magic number here
+            .attr("x", function(){ return x(lineEnd)})
+            .attr('text-anchor', 'middle')
+            .attr("class", "myLabel")//easy to style with CSS
+
 
 
     }

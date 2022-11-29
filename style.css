@@ -23,6 +23,9 @@ th {
     display: inline-block;
 }
 
+.mylabel {
+    color: black;
+}
 td {
     text-align: center;
     padding-top: 0px;

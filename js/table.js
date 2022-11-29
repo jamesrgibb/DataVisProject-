@@ -7,6 +7,7 @@ class Table{
             column: "",
             ascending: false
         }
+        this.state.tableData.selectedStat = ''
 
         this.tableHeight = 500;
         this.tableWidth = 600;
@@ -92,7 +93,6 @@ class Table{
             // each scale will have constant domain, change range as needed\
 
         columns.forEach(element => {
-            console.log(element)
             if (!this.descendingOff.includes(element)) {
                 let scale = d3.scaleLinear().domain([
                     d3.min(data, d => parseFloat(d[element])),
@@ -136,22 +136,30 @@ class Table{
                 }
             })
             //TODO: move the defensive and offense selection out of the chart scrolling
-
+            //TODO: make the lines update dynamically when a new selection is made
             .on('click', function(d){
                 let col = d['path'][0].__data__.column
                 let team = d['path'][0].__data__.team
-                console.log(d['path'])
-
-                d3.select('#line').remove();
-                d3.select('#y-axis').remove();
-                d3.select('#y-axis').text('');
-                globalApplicationState.correlation = new Correlation(globalApplicationState)
-                d3.select('#line').remove();
-                d3.select('#y-axis').text('');
-                d3.select('#y-axis').remove();
-                let newCol = col.toLowerCase()
-                col = newCol.replaceAll(".","_")
-                globalApplicationState.correlation.chartSetup(team,col)
+                if(col !== globalApplicationState.table.state.tableData.selectedStat) {
+                    globalApplicationState.table.state.tableData.selectedStat = col;
+                    d3.select('#line').remove();
+                    d3.select('#y-axis').remove();
+                    d3.select('#y-axis').text('');
+                    globalApplicationState.correlation = new Correlation(globalApplicationState)
+                    d3.select('#line').remove();
+                    d3.select('#y-axis').text('');
+                    d3.select('#y-axis').remove();
+                    let newCol = col.toLowerCase()
+                    col = newCol.replaceAll(".", "_")
+                    globalApplicationState.correlation.chartSetup(team, col)
+                }
+                else{
+                    d3.select('#y-axis').remove();
+                    globalApplicationState.table.state.tableData.selectedStat = col
+                    let newCol = col.toLowerCase()
+                    col = newCol.replaceAll(".", "_")
+                    globalApplicationState.correlation.chartSetup(team, col)
+                }
             })
             .style('background-color', function(d){
                 if(d.column === "Team"){

@@ -76,15 +76,20 @@ loadData().then((loadedData) => {
     globalApplicationState.tableState = defaultState;
     globalApplicationState.corrleationState = defaultState;
     globalApplicationState.histogramState = defaultState;
+    globalApplicationState.scatterState = defaultState;
 
     // set table state initialize table
     globalApplicationState.table = new Table(globalApplicationState)
 
     // initialize correlation
-
+    globalApplicationState.years =  [new Date('2013'), new Date('2014'), new Date('2015'), new Date('2016'), new Date('2017'), new Date('2018'), new Date('2019'), new Date('2020'), new Date('2021')]
+    globalApplicationState.correlation = new Correlation(globalApplicationState)
 
     // initialize histogram
     globalApplicationState.histogram = new Histogram(globalApplicationState)
+
+    // initialize scatter plot
+    globalApplicationState.scatter = new Scatter(globalApplicationState)
 
     // add dropdown to select season
     let seasons = ["13", "14", "15", "16", "17", "18", "19", "20"]
@@ -104,8 +109,7 @@ loadData().then((loadedData) => {
     d3.select("#grouping").on("change", changeGroupingHandler)
     // sort handler
     d3.select("#columnHeaders").selectAll("td").on("click", sortHandler)
-    globalApplicationState.years =  [new Date('2013'), new Date('2014'), new Date('2015'), new Date('2016'), new Date('2017'), new Date('2018'), new Date('2019'), new Date('2020'), new Date('2021')]
-    globalApplicationState.correlation = new Correlation(globalApplicationState)
+
 });
 
 function sortHandler(d) {
