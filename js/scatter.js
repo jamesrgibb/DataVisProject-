@@ -41,7 +41,7 @@ class Scatter {
             .selectAll('myOptions')
             .data(this.columns)
             .enter()
-            .append('option')
+            .append('option')cccc
             .text(function (d) {
                 return d.replaceAll(".", " ");
             })
