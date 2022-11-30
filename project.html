@@ -45,10 +45,32 @@
         <svg id="hist-svg" style="margin: 10px">
 
         </svg>
+
     </div>
+    <div class="view1" id="scatter-div" style="margin-left: 15px;width:600px; height: 600px; padding: 10px;">
+        <select selected ="selectX-axis" id="selectX-axis">
+            <option value="none" selected disabled hidden>
+                X-Axis
+            </option>
+        </select>
+        <select id ="selectY-axis" >
+            <option value="none" selected disabled hidden>
+                Y-Axis
+            </option>
+        </select>
+        <select id ="select-Year" >
+            <option value="none" selected disabled hidden>
+               Year
+            </option>
+            </select>
+        <button id="display-graph">Display Graph</button>
+        <svg id="scatter-svg" style=" margin: 10px">
+        </svg>
     </div>
 </div>
+</div>
 <link rel="stylesheet" href="style.css"/>
+<script src="js/scatter.js"></script>
 <script src="js/table.js"></script>
 <script src="js/correlation.js"></script>
 <script src="js/histogram.js"></script>
