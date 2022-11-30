@@ -61,7 +61,6 @@ loadData().then((loadedData) => {
     // get team data across all 9 seasons into map
     globalApplicationState.teamMap = groupByTeam(loadedData);
     globalApplicationState.missingTeamData = formatYearColumn(globalApplicationState.teamMap);
-    globalApplicationState.missingStats = ['Opp.Kickoff.Return.Touchdowns.Allowed',];
     globalApplicationState.teamMap.columns = loadedData.columns;
     globalApplicationState.chartData = parseStats(globalApplicationState.teamMap);
     const defaultState = {
@@ -69,12 +68,14 @@ loadData().then((loadedData) => {
         tableData: globalApplicationState.data[loadedData.length-1],
         currentGrouping: "offense",
         seasonalData: loadedData,
+        selectedStat: '',
+        selectedTeams: new Set(),
 
     }
 
     // set default team data across all 9 seasons
     globalApplicationState.tableState = defaultState;
-    globalApplicationState.corrleationState = defaultState;
+    globalApplicationState.correlationState = defaultState;
     globalApplicationState.histogramState = defaultState;
     globalApplicationState.scatterState = defaultState;
 
