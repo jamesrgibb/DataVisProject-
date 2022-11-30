@@ -140,6 +140,10 @@ class Table{
             .on('click', function(d){
                 let col = d['path'][0].__data__.column
                 let team = d['path'][0].__data__.team
+
+                // hist needs the names unchanged 
+                globalApplicationState.histogram.setupHist(team, col)
+
                 console.log(d['path'])
 
                 d3.select('#line').remove();
@@ -152,6 +156,9 @@ class Table{
                 let newCol = col.toLowerCase()
                 col = newCol.replaceAll(".","_")
                 globalApplicationState.correlation.chartSetup(team,col)
+
+
+                
             })
             .style('background-color', function(d){
                 if(d.column === "Team"){

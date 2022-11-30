@@ -31,28 +31,57 @@ class Histogram{
 
         this.currentTeam = team
         this.currentStat = column
+        let res = this.resolution
 
         let data = this.globalState.tableState.tableData
 
+        let statMax = d3.max(data, d => +d[this.currentStat])
+        let statMin = d3.min(data, d => +d[this.currentStat])
+        let binWidth = (statMax - statMin) / this.resolution
+
+        // initialize array of empty arrays for bins 
+        let bins = new Array(res)
+
+        // find bin of selected team for highlight
+        let highlightIdx 
+        data.forEach(function(d){
+            // get the bin number of the object
+            let binNumber = Math.floor((+d[column] - statMin) / binWidth)
+
+            // round down if we find the max values
+            if(binNumber === res){binNumber--}
+
+            // create a bin if one doesnt exist
+            if(typeof bins[binNumber] === "undefined"){ bins[binNumber] = []}
+
+            // add element to bin 
+            bins[binNumber].push(d)
+
+            if(d.Team === team){highlightIdx = binNumber}
+        })
+
+        //sort each bin and set thresholds 
+        let thresholds = []
+        bins.forEach(function(bin){
+            bin.sort((a,b)=>
+                d3.ascending(+a[column], +b[column])
+        )
+        //min of each bin 
+        thresholds.push(bin[0][column])
+        })
+
         let x = d3.scaleLinear().domain(
-            [0, d3.max(data, d => +d[this.currentStat])]
+            [statMin, statMax]
             
         ).range(
-            [this.margin.left, this.vizWidth - this.margin.left]
+            [this.margin.left, this.vizWidth - this.margin.right]
         )
-
-        let histogram = d3.histogram()
-                            .value(d => +d[this.currentStat])
-                            .domain(x.domain())
-                            .thresholds(x.ticks(this.resolution))
-
-        let bins = histogram(data)
 
         let y = d3.scaleLinear()
         .domain(
-            [0, d3.max(bins, function(d) { return +d.length; })]
+            [0, d3.max(bins, d=> d.length)]
         ).range(
-            [this.visHeight - this.margin.bottom, this.margin.top]
+            [this.margin.top, this.visHeight - this.margin.bottom]
         )
 
         let svg = d3.select("#hist-svg")
@@ -60,16 +89,26 @@ class Histogram{
         svg.attr("height", this.visHeight)
         svg.attr("width", this.vizWidth)
 
-        svg.append('g').call(d3.axisBottom(x).ticks(this.resolution)).attr("transform", `translate(0, ${this.visHeight - this.margin.bottom})`)
-        //svg.append('g').call(d3.axisLeft(y)).attr("transform", `translate(${this.margin.left}, 0)`)
+        // if axis exists, needs removal
+        svg.select("#hist-x-axis").remove()
+        svg.select("#hist-y-axis").remove()
+        
+        
+        svg.append('g').call(d3.axisBottom(x).tickValues(thresholds))
+        .attr("id", "hist-x-axis")
+        .attr("transform", `translate(0, ${this.visHeight - this.margin.bottom})`)
+        svg.append('g').call(d3.axisLeft(y))
+        .attr("id", "hist-y-axis")
+        .attr("transform", `translate(${this.margin.left}, 0)`)
 
-        let height = this.visHeight - this.margin.top - this.margin.bottom
+        let height = this.visHeight - this.margin.bottom
         let bottomAdjust = this.margin.top - this.margin.bottom 
         svg.selectAll("rect").data(bins).join("rect")
-            .attr("x", 1)
-            .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-            .attr("height", function(d) { return height - y(d.length); })
-            .attr("transform", function(d) { return `translate(${x(d.x0)}, ${y(d.length) - bottomAdjust})`; })
-            .style("fill", "#69b3a2")
+            //.attr("x", 0)
+            .attr("width", x(statMin + binWidth) - x(statMin))
+            .attr("height", d => y(d.length))
+            .attr("transform", (d,i) => `translate(${x(statMin + i * binWidth) }, ${height - y(d.length)})`)
+            .style("fill", (d,i)=> i === highlightIdx ? "lightblue" : "#69b3a2")
+            
     }
 }
