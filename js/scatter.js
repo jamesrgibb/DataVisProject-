@@ -59,9 +59,6 @@ class Scatter {
         this.svg
             .attr('width', this.width + this.margin.left + this.margin.right)
             .attr('height', this.height + this.margin.top + this.margin.bottom)
-
-        this.updateScatter('Def.Rank', 'Win', 2020)
-
         d3.select('#display-graph')
             .on('click', function (d) {
                 d3.select('dot').exit().remove();
@@ -73,10 +70,12 @@ class Scatter {
                     d3.select('#selectX-axis').property('value'),
                     d3.select('#select-Year').property('value'))
             })
+        this.updateScatter('Def.Rank', 'Win', 2020)
 
     }
 
     updateScatter(xStat, yStat, yearStat) {
+        document.querySelectorAll('circle').forEach(function(d){ return d.remove();})
         let ya = []
         let xa = []
         this.scatterData.forEach(function (d) {
@@ -152,26 +151,54 @@ class Scatter {
         this.svg.append('g')
             .selectAll('circle')
             .data(defaultTuple)
-            .enter()
-            .append('circle')
-            .attr('cx', d => this.xAxis(d[0]))
-            .attr('cy', d => this.yAxis(d[1]))
-            .attr('r', 7)
-            .style('fill', d => this.teamColor(d))
-            .style("stroke", "black")
-            .on('mouseenter', function (d) {
-                d3.select(this).attr('r', 12)
+            .join(
+                enter => enter
+                    .append('circle')
+                    .attr('cx', (d) => this.xAxis(d[0]))
+                    .attr('cy', (d) => this.yAxis(d[1]))
+                    .attr('r', 0)
                     .transition()
                     .duration(200)
+                    .attr('r', 7)
+                    .transition()
+                    .delay(200)
+                    .duration(200)
+                    .attr('r', 5)
+                    .style('fill', d => this.teamColor(d))
+                    .style("stroke", "black"),
+
+                update => update
+                    .transition()
+                    .duration(200)
+                    .attr('transform', `translate(0,20)`)
+                    .attr('cx', (d) => this.xAxis(d[0]))
+                    .attr('cy', (d) => this.yAxis(d[1])),
+
+                exit => exit
+                    .transition()
+                    .duration(200)
+                    .attr('r', 7)
+                    .transition()
+                    .delay(200)
+                    .duration(200)
+                    .attr('r', 0)
+                    .remove()
+            )
+            .on('mouseenter', function (d) {
+                d3.select(this).attr('r', 12)
+                    .append('text')
+                    .text('hello')
+                    .transition()
+                    .duration(200)
+
             })
             .on('mouseleave', function (d) {
                 d3.select(this).attr('r', 7)
                     .transition()
                     .duration(200)
-
+                    .text('')
             });
     }
-
 
 
 }
