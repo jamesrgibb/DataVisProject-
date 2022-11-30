@@ -45,6 +45,7 @@ class Correlation {
             .attr('x', 150)
             .attr('y', 30)
             .text('Years')
+            .style('text-anchor', "middle")
             .style('font-size', '14px')
             .attr('fill', 'black')
 

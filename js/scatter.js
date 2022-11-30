@@ -2,7 +2,6 @@ class Scatter {
     constructor(state) {
         this.data = state.chartData;
         this.svg = d3.select('#scatter-svg');
-        this.height = 400
         this.height = 400;
         this.width = 300;
         this.yAxisPadding = 50;
@@ -61,7 +60,7 @@ class Scatter {
             .attr('width', this.width + this.margin.left + this.margin.right)
             .attr('height', this.height + this.margin.top + this.margin.bottom)
 
-        this.drawDefaultScatter()
+        this.updateScatter('Def.Rank', 'Win', 2020)
 
         d3.select('#display-graph')
             .on('click', function (d) {
@@ -77,29 +76,52 @@ class Scatter {
 
     }
 
-    drawDefaultScatter() {
+    updateScatter(xStat, yStat, yearStat) {
         let ya = []
         let xa = []
         this.scatterData.forEach(function (d) {
-            ya.push(parseInt(d.Win))
+            xa.push(parseFloat(d[xStat]))
         })
-
         this.scatterData.forEach(function (d) {
-            xa.push(d['Def.Rank'])
+            ya.push(parseFloat(d[yStat]))
         })
 
         let defaultTuple = []
         xa.forEach(function (d, i) {
             defaultTuple.push([xa[i], ya[i]])
         })
+        this.xAxis = d3.scaleLinear()
+            .domain([0, d3.max(xa)])
+            .range([this.xAxisPadding, this.width])
 
         this.yAxis = d3.scaleLinear()
             .domain([0, d3.max(ya)])
             .range([this.height - 25, this.yAxisPadding])
 
-        this.xAxis = d3.scaleLinear()
-            .domain([0, d3.max(xa)])
-            .range([this.xAxisPadding, this.width])
+        this.svg.append('g')
+            .attr('transform', 'translate(0,' + 375 + ')')
+            .attr('id', 'scatterX')
+            .call(d3.axisBottom(this.xAxis))
+        this.svg
+            .select('#scatterX')
+            .append('text')
+            .attr('x', 150)
+            .attr('y', 30)
+            .text(function () {
+                let xs = xStat
+                xs = xs.replaceAll(".", " ")
+                xs = xs.replaceAll("Def", "Defensive")
+                xs = xs.replaceAll("Off", "Offensive")
+                xs = xs.replaceAll("TDs", "Touchdowns")
+                xs = xs.replaceAll("Opp", "Opponent")
+                xs = xs.replaceAll("Yds", "Yards")
+                return xs
+
+            })
+            .attr('fill', 'black')
+            .style('font-size', '14px')
+            .style('text-anchor', "middle");
+
 
         this.svg.append('g')
             .attr('id', 'scatterY')
@@ -114,118 +136,42 @@ class Scatter {
             .attr('fill', 'black')
             .attr('font-size', '14px')
             .attr('transform', 'rotate(-90)')
-            .text('Wins');
+            .text(function () {
+                let ys = yStat
+                ys = ys.replaceAll(".", " ")
+                ys = ys.replaceAll("Def", "Defensive")
+                ys = ys.replaceAll("Off", "Offensive")
+                ys = ys.replaceAll("TDs", "Touchdowns")
+                ys = ys.replaceAll("Opp", "Opponent")
+                ys = ys.replaceAll("Yds", "Yards")
+                return ys
+            })
+            .style('text-anchor', "middle");
+
 
         this.svg.append('g')
-            .attr('transform', 'translate(0,' + 375 + ')')
-            .attr('id', 'scatterX')
-            .call(d3.axisBottom(this.xAxis))
-            .attr('height', 30)
-
-        this.svg
-            .select('#scatterX')
-            .append('text')
-            .attr('x', 150)
-            .attr('y', 30)
-            .text('Defensive Ranking')
-            .style('font-size', '14px')
-            .attr('fill', 'black')
-
-        const dots = this.svg.append('g')
             .selectAll('circle')
             .data(defaultTuple)
             .enter()
             .append('circle')
             .attr('cx', d => this.xAxis(d[0]))
             .attr('cy', d => this.yAxis(d[1]))
-            .attr('r', 10)
+            .attr('r', 7)
             .style('fill', d => this.teamColor(d))
             .style("stroke", "black")
             .on('mouseenter', function (d) {
-                d3.select(this).attr('r', 15)
+                d3.select(this).attr('r', 12)
                     .transition()
                     .duration(200)
             })
             .on('mouseleave', function (d) {
-                d3.select(this).attr('r', 10)
+                d3.select(this).attr('r', 7)
                     .transition()
                     .duration(200)
 
-            })
-
-
-        this.attachHover()
+            });
     }
 
-    updateScatter(yVal, xVal, yearVal) {
-        let ya = []
-        let xa = []
-        this.scatterData.forEach(function (d) {
-            ya.push(parseInt(d[yVal]))
-        })
 
-        this.scatterData.forEach(function (d) {
-            xa.push(d[xVal])
-        })
-        let updatedTuple = []
-        xa.forEach(function (d, i) {
-            updatedTuple.push([xa[i], ya[i]])
-        })
-        this.yAxis = d3.scaleLinear()
-            .domain([0, d3.max(ya)])
-            .range([this.height - 25, this.yAxisPadding])
-
-        this.xAxis = d3.scaleLinear()
-            .domain([0, d3.max(xa)])
-            .range([this.xAxisPadding, this.width])
-
-        this.svg.append('g')
-            .attr('id', 'scatterY')
-            .attr('transform', 'translate(' + this.yAxisPadding + ',0)')
-            .attr('width', 100)
-            .call(d3.axisLeft(this.yAxis))
-
-        this.svg.select('#scatterY')
-            .append('text')
-            .attr('x', -200)
-            .attr('y', -40)
-            .attr('fill', 'black')
-            .attr('font-size', '14px')
-            .attr('transform', 'rotate(-90)')
-            .text(yVal);
-
-        this.svg.append('g')
-            .attr('transform', 'translate(0,' + 375 + ')')
-            .attr('id', 'scatterX')
-            .call(d3.axisBottom(this.xAxis))
-            .attr('height', 30)
-
-        this.svg
-            .select('#scatterX')
-            .append('text')
-            .attr('x', 150)
-            .attr('y', 30)
-            .text(xVal)
-            .style('font-size', '14px')
-            .attr('fill', 'black')
-
-        this.svg.append('g')
-            .selectAll('circle')
-            .data(updatedTuple)
-            .enter()
-            .append('circle')
-            .attr('cx', d => this.xAxis(d[0]))
-            .attr('cy', d => this.yAxis(d[1]))
-            .attr('r', 2)
-            .style('fill', d => this.teamColor(d))
-            .style("stroke", "black")
-
-
-    }
-
-    attachHover() {
-
-
-    }
 
 }
