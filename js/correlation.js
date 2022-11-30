@@ -1,8 +1,8 @@
 class Correlation {
-    constructor(globalState) {
+    constructor(state) {
 
         //Create a new Correlation with the given data
-        this.state = globalState;
+        this.state = state;
         this.svg = d3.select('#chart-svg');
         this.height = 400;
         this.width = 300;
@@ -18,13 +18,11 @@ class Correlation {
         this.yScale = null;
         this.xScale = null;
         this.yAxis = null;
-
         // set up svg element
         let currentTeam = 'Akron';
         let currentStat = 'win';
         const teams = Object.keys(this.data)
         const stats = Object.keys(this.data.Akron)
-
         //set up width and height
         this.svg
             .attr('width', this.width + this.margin.left + this.margin.right)
@@ -79,13 +77,23 @@ class Correlation {
 
     }
 
-    chartSetup(currentTeam,currentStat) {
-        //get stats and team values
+    chartSetup(currentTeam,corrStat) {
+        if(!globalApplicationState.selectedTeams.includes(currentTeam) && globalApplicationState.selectedStat === corrStat){
+            globalApplicationState.selectedTeams.push(currentTeam)
+        }
+        else{
+            globalApplicationState.selectedStat =  corrStat
+            globalApplicationState.selectedTeams = []
+            globalApplicationState.selectedTeams.push(currentTeam)
+        }
         const teams = Object.keys(this.data)
         const stats = Object.keys(this.data.Akron)
         const xax = this.xAxis
-        const maxValue = this.data[currentTeam][currentStat];
-
+        let maxValue = []
+        globalApplicationState.selectedTeams.forEach(function(d){
+            let locMax = d3.max(globalApplicationState.correlation.data[d][corrStat])
+            maxValue.push(locMax)
+        })
         this.yAxis = d3.scaleLinear()
             .domain([0, d3.max(maxValue)])
             .range([this.height - 25, this.yAxisPadding])
@@ -101,7 +109,7 @@ class Correlation {
         let yLabel = this.svg.select('#y-axis')
             .append('text')
             .text(function () {
-                let yTitle = currentStat.replaceAll('_', ' ')
+                let yTitle = corrStat.replaceAll('_', ' ')
                 yTitle = yTitle.toUpperCase()
                 return yTitle
             })
@@ -121,7 +129,7 @@ class Correlation {
         const line = this.svg.append('g')
             .append('path')
             .attr('id', 'line')
-            .datum(this.data[`${currentTeam}`][`${currentStat}`])
+            .datum(this.data[`${currentTeam}`][`${corrStat}`])
             .attr('fill', 'none')
             .attr('stroke', teamColor(currentTeam))
             .attr('stroke-width', 1)
@@ -139,12 +147,11 @@ class Correlation {
             .text(function (d, i, c) {
                 return d
             })
-        let myText =  svg.append("text")
-            .attr("y", height - 10)//magic number here
-            .attr("x", function(){ return x(lineEnd)})
-            .attr('text-anchor', 'middle')
-            .attr("class", "myLabel")//easy to style with CSS
 
+        this.svg.selectAll("line")
+            .data(this.data[`${currentTeam}`][`${corrStat}`])
+            .enter()
+            .append("text")
 
 
     }

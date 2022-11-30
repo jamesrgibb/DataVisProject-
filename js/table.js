@@ -140,8 +140,7 @@ class Table{
             .on('click', function(d){
                 let col = d['path'][0].__data__.column
                 let team = d['path'][0].__data__.team
-                if(col !== globalApplicationState.table.state.tableData.selectedStat) {
-                    globalApplicationState.table.state.tableData.selectedStat = col;
+                if(col !== globalApplicationState.selectedStat) {
                     d3.select('#line').remove();
                     d3.select('#y-axis').remove();
                     d3.select('#y-axis').text('');
@@ -155,7 +154,6 @@ class Table{
                 }
                 else{
                     d3.select('#y-axis').remove();
-                    globalApplicationState.table.state.tableData.selectedStat = col
                     let newCol = col.toLowerCase()
                     col = newCol.replaceAll(".", "_")
                     globalApplicationState.correlation.chartSetup(team, col)

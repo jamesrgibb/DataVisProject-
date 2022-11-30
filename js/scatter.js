@@ -13,7 +13,7 @@ class Scatter {
         this.xAxis = null;
         this.teams = Object.keys(this.data)
         this.stats = Object.keys(this.data.Akron)
-
+        this.teamColor = d3.scaleOrdinal(d3.schemeTableau10).domain(this.teams);
         this.columns = state.scatterState.drawData.columns
         let columns = state.scatterState.drawData.columns
         this.drawData = state.scatterState.drawData.filter(d => !state.missingTeamData.includes(d.Team))
@@ -41,7 +41,7 @@ class Scatter {
             .selectAll('myOptions')
             .data(this.columns)
             .enter()
-            .append('option')cccc
+            .append('option')
             .text(function (d) {
                 return d.replaceAll(".", " ");
             })
@@ -131,15 +131,29 @@ class Scatter {
             .style('font-size', '14px')
             .attr('fill', 'black')
 
-        this.svg.append('g')
+        const dots = this.svg.append('g')
             .selectAll('circle')
             .data(defaultTuple)
             .enter()
             .append('circle')
             .attr('cx', d => this.xAxis(d[0]))
             .attr('cy', d => this.yAxis(d[1]))
-            .attr('r', 2)
-            .style('fill', 'black')
+            .attr('r', 10)
+            .style('fill', d => this.teamColor(d))
+            .style("stroke", "black")
+            .on('mouseenter', function (d) {
+                d3.select(this).attr('r', 15)
+                    .transition()
+                    .duration(200)
+            })
+            .on('mouseleave', function (d) {
+                d3.select(this).attr('r', 10)
+                    .transition()
+                    .duration(200)
+
+            })
+
+
         this.attachHover()
     }
 
@@ -203,11 +217,9 @@ class Scatter {
             .attr('cx', d => this.xAxis(d[0]))
             .attr('cy', d => this.yAxis(d[1]))
             .attr('r', 2)
-            .style('fill', 'black')
-        d3.selectAll('circle')
-            .on('hover', function (d){
-                console.log(d)
-            })
+            .style('fill', d => this.teamColor(d))
+            .style("stroke", "black")
+
 
     }
 
