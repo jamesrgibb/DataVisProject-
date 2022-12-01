@@ -144,9 +144,6 @@ class Correlation {
                     .style('fill','white')
             })
             .style('cursor', 'pointer')
-
-
-        // set event listener for the display graph variable
     }
 
     chartSetup(currentTeam,corrStat) {

@@ -1,7 +1,8 @@
 /* DATA LOADING */
 async function loadData () {
-
     const dataset_array = []
+    let logos = []
+    logos =  await d3.json('data/cfb_logos.json')
     for (let i = 13; i < 21; i++) {
 
         path = `data/TeamStats/cfb${i}.csv`
@@ -22,7 +23,7 @@ async function loadData () {
 
 
     // returns 9 len array, each element is full dataset from one season
-    return dataset_array;
+    return [logos,dataset_array];
 }
 
 
@@ -49,9 +50,8 @@ const globalApplicationState = {
 
 };
 
-loadData().then((loadedData) => {
-
-
+loadData().then((dataA) => {
+    loadedData = dataA[1]
     loadedData.forEach(function (dataFrame) {
         cleanDataFrame(dataFrame)
     })
@@ -63,6 +63,7 @@ loadData().then((loadedData) => {
     globalApplicationState.missingTeamData = formatYearColumn(globalApplicationState.teamMap);
     globalApplicationState.teamMap.columns = loadedData.columns;
     globalApplicationState.chartData = parseStats(globalApplicationState.teamMap);
+    globalApplicationState.logos = logoDataStructure(globalApplicationState.chartData,dataA[0])
     const defaultState = {
         drawData: globalApplicationState.data[loadedData.length-1],
         tableData: globalApplicationState.data[loadedData.length-1],
@@ -126,15 +127,6 @@ function changeSeasonHandler(d) {
     globalApplicationState.table.changeSeason(this.value)
 }
 
-function filterStats(d) {
-    d.forEach(function (year){
-        year.forEach(function (stats) {
-            delete stats['Kickoff.Return.Touchdowns']
-
-        })
-    })
-
-}
 function groupByTeam(array) {
 
 
@@ -366,4 +358,41 @@ function parseStats(data) {
 
     })
     return teamStats
+}
+function logoDataStructure(teamName, dataA){
+    let team = {}
+    let nm = Object.keys(teamName)
+    dataA.forEach(function(d){
+        let v = d.school
+        v = v.replace("State","St.")
+        v = v.replaceAll("Army","Army West Point")
+        v = v.replaceAll("Central Michigan","Central Mich.")
+        v = v.replaceAll("Florida International", "FIU")
+        v = v.replaceAll("Florida Atlantic", "Fla. Atlantic")
+        v = v.replaceAll("UMass", "Massachusetts")
+        v = v.replaceAll("Middle Tennessee", "Middle Tenn.")
+        v = v.replaceAll("North Carolina St.", "NC St.")
+        v = v.replaceAll("Northern Illinois", "Northern Ill.")
+        v = v.replaceAll("South Florida", "South Fla.")
+        v = v.replaceAll("USC", "Southern California")
+        v = v.replaceAll("Southern Mississippi", "Southern Miss.")
+        v = v.replaceAll("Western Kentucky", "Western Ky.")
+        v = v.replaceAll("Eastern Michigan", "Eastern Mich.")
+        v = v.replaceAll("Western Michigan", "Western Mich.")
+        if(v.includes("Miami")){
+            if(v.length === 5){
+                v = v.replaceAll("Miami","Miami (ACC)")
+            }
+            else{
+                v = v.replaceAll("Miami (OH)","Miami (MAC)")
+            }
+        }
+        if(v.includes("NC St.")){
+            v = v.replaceAll("NC St.", "NC State")
+        }
+        if(nm.includes(v)) {
+            team[`${v}`] = d.logo
+        }
+    })
+    return team
 }
