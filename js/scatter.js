@@ -1,5 +1,6 @@
 class Scatter {
     constructor(state) {
+        this.state = state;
         this.data = state.chartData;
         this.svg = d3.select('#scatter-svg');
         this.height = 400;
@@ -7,7 +8,8 @@ class Scatter {
         this.yAxisPadding = 50;
         this.xAxisPadding = 50;
         this.margin = {left: 50, bottom: 20, top: 10, right: 20};
-        this.years = state.years
+        this.yearsDisplayed = state.years
+        this.years = {0: 2012,1:2013,2:2014,3:2015,4:2016,5:2017,6:2018,7:2019}
         this.yAxis = null;
         this.xAxis = null;
         this.teams = Object.keys(this.data)
@@ -31,65 +33,80 @@ class Scatter {
             .enter()
             .append('option')
             .text(function (d) {
-                return d.replaceAll(".", " ");
+                let ys = d
+                ys = ys.replaceAll(".", " ")
+                ys = ys.replaceAll("Def", "Defensive")
+                ys = ys.replaceAll("Off", "Offensive")
+                ys = ys.replaceAll("TDs", "Touchdowns")
+                ys = ys.replaceAll("Opp", "Opponent")
+                ys = ys.replaceAll("Yds", "Yards")
+                return ys
             })
             .attr('value', function (d) {
                 return d
             })
+        //TODO: edit list showing to only show the stats on the table
         d3.select('#selectX-axis')
             .selectAll('myOptions')
             .data(this.columns)
             .enter()
             .append('option')
             .text(function (d) {
-                return d.replaceAll(".", " ");
+                let ys = d
+                ys = ys.replaceAll(".", " ")
+                ys = ys.replaceAll("Def", "Defensive")
+                ys = ys.replaceAll("Off", "Offensive")
+                ys = ys.replaceAll("TDs", "Touchdowns")
+                ys = ys.replaceAll("Opp", "Opponent")
+                ys = ys.replaceAll("Yds", "Yards")
+                return ys
             })
             .attr('value', function (d) {
                 return d
             })
         d3.select('#select-Year')
             .selectAll('myOptions')
-            .data(this.years)
+            .data(this.yearsDisplayed)
             .enter()
             .append('option')
             .text(d => d.getFullYear())
-            .attr('value', function (d) {
-                return d
+            .attr('value', function (d,i) {
+                return i
             })
+
         this.svg
             .attr('width', this.width + this.margin.left + this.margin.right)
             .attr('height', this.height + this.margin.top + this.margin.bottom)
         const button = d3.select('#display-graph')
-            button.on('click', function (d) {
-                d3.select('dot').exit().remove();
-                d3.select('#scatterY').remove()
-                d3.select('#scatterX').remove()
-                d3.select('#scatterY').text('');
-                d3.select('#scatterX').text('');
-                return globalApplicationState.scatter.updateScatter(d3.select('#selectY-axis').property('value'),
-                    d3.select('#selectX-axis').property('value'),
-                    d3.select('#select-Year').property('value'))
-            });
 
-        this.updateScatter('Def.Rank', 'Win', 2020)
+        button.on('click', function (d) {
+            d3.select('dot').exit().remove();
+            d3.select('#scatterY').remove()
+            d3.select('#scatterX').remove()
+            d3.select('#scatterY').text('');
+            d3.select('#scatterX').text('');
+            let yr = d3.select('#select-Year').property('value')
+            return globalApplicationState.scatter.updateScatter(d3.select('#selectY-axis').property('value'),
+                d3.select('#selectX-axis').property('value'),
+                yr)
+        });
+
+        this.updateScatter('Def.Rank', 'Win', 7)
 
     }
 
     updateScatter(xStat, yStat, yearStat) {
         document.querySelectorAll('circle').forEach(function(d){ return d.remove();})
-        let ya = []
+        let defaultTriple = []
         let xa = []
-        this.scatterData.forEach(function (d) {
-            xa.push(parseFloat(d[xStat]))
-        })
-        this.scatterData.forEach(function (d) {
-            ya.push(parseFloat(d[yStat]))
-        })
-
-        let defaultTuple = []
-        xa.forEach(function (d, i) {
-            defaultTuple.push([xa[i], ya[i]])
-        })
+        let ya = []
+        xStat = xStat.replaceAll(".", "_").toLowerCase()
+        yStat = yStat.replaceAll(".", "_").toLowerCase()
+        for (let d in this.data) {
+            xa.push(this.data[d][xStat][yearStat])
+            ya.push(this.data[d][yStat][yearStat])
+            defaultTriple.push([d,this.data[d][xStat][yearStat], this.data[d][yStat][yearStat]])
+        }
         this.xAxis = d3.scaleLinear()
             .domain([0, d3.max(xa)])
             .range([this.xAxisPadding, this.width])
@@ -151,12 +168,12 @@ class Scatter {
 
         this.svg.append('g')
             .selectAll('circle')
-            .data(defaultTuple)
+            .data(defaultTriple)
             .join(
                 enter => enter
                     .append('circle')
-                    .attr('cx', (d) => this.xAxis(d[0]))
-                    .attr('cy', (d) => this.yAxis(d[1]))
+                    .attr('cx', (d) => this.xAxis(d[1]))
+                    .attr('cy', (d) => this.yAxis(d[2]))
                     .attr('r', 0)
                     .transition()
                     .duration(200)
@@ -165,15 +182,15 @@ class Scatter {
                     .delay(200)
                     .duration(200)
                     .attr('r', 6)
-                    .style('fill', d => this.teamColor(d))
+                    .style('fill', d => this.teamColor(d[0]))
                     .style("stroke", "black"),
 
                 update => update
                     .transition()
                     .duration(200)
                     .attr('transform', `translate(0,20)`)
-                    .attr('cx', (d) => this.xAxis(d[0]))
-                    .attr('cy', (d) => this.yAxis(d[1])),
+                    .attr('cx', (d) => this.xAxis(d[1]))
+                    .attr('cy', (d) => this.yAxis(d[2])),
 
                 exit => exit
                     .transition()

@@ -22,6 +22,9 @@ th {
 .view1{
     display: inline-block;
 }
+.view2{
+    display: inline-block;
+}
 
 .mylabel {
     color: black;

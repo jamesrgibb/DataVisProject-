@@ -142,13 +142,9 @@ class Table {
 
                 // hist needs the names unchanged 
                 globalApplicationState.histogram.setupHist(team, col)
-
-                console.log(d['path'])
-
                 d3.select('#line').remove();
                 d3.select('#y-axis').remove();
                 d3.select('#y-axis').text('');
-                globalApplicationState.correlation = new Correlation(globalApplicationState)
                 d3.select('#line').remove();
                 d3.select('#y-axis').text('');
                 d3.select('#y-axis').remove();

@@ -13,8 +13,6 @@ class Correlation {
         this.columns = this.state.table.state.drawData.columns;
         this.data = this.state.chartData;
         this.Team = this.state.table.state.drawData;
-        this.selectTeam = state.correlationState.selectedTeams;
-        this.selectStat = state.correlationState.selectedStat;
         this.yScale = null;
         this.xScale = null;
         this.yAxis = null;
@@ -147,13 +145,12 @@ class Correlation {
     }
 
     chartSetup(currentTeam,corrStat) {
-
         if(globalApplicationState.correlationState.selectedStat === corrStat){
             document.querySelectorAll('.teamline').forEach(function(d){ return d.remove();});
             d3.select('#y-axis').remove();
             d3.select('#x-axis').remove();
             d3.select('#y-axis').text('');
-            this.selectTeam.add(currentTeam);
+            globalApplicationState.correlationState.selectedTeams.add(currentTeam);
         }
         else{
             document.querySelectorAll('.teamline').forEach(function(d){ return d.remove();});
@@ -161,15 +158,14 @@ class Correlation {
             d3.select('#x-axis').remove();
             d3.select('#y-axis').text('');
             globalApplicationState.correlationState.selectedStat = corrStat
-            this.selectTeam = new Set()
-            this.selectTeam.add(currentTeam);
+            globalApplicationState.correlationState.selectedTeams = new Set()
+            globalApplicationState.correlationState.selectedTeams.add(currentTeam);
         }
-        console.log(this.selectTeam)
         const teams = Object.keys(this.data)
         const stats = Object.keys(this.data.Akron)
         const xax = this.xAxis
         let maxValue = []
-        this.selectTeam.forEach(function(d){
+        globalApplicationState.correlationState.selectedTeams.forEach(function(d){
             let locMax = d3.max(globalApplicationState.correlation.data[d][corrStat])
             maxValue.push(locMax)
         })
@@ -233,7 +229,7 @@ class Correlation {
         const yax = this.yAxis
 
         // create the lines for the data
-        for(let k of this.selectTeam) {
+        for(let k of globalApplicationState.correlationState.selectedTeams) {
             this.svg.append('g')
                 .append('path')
                 .attr('id', `line-${k}`)

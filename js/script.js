@@ -71,7 +71,6 @@ loadData().then((dataA) => {
         seasonalData: loadedData,
         selectedStat: '',
         selectedTeams: new Set(),
-
     }
 
     // set default team data across all 9 seasons
