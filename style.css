@@ -37,7 +37,17 @@ td {
 
 
 }
-
+button{
+    background-color: mediumaquamarine;
+    color: white;
+    border-radius: 4px;
+    transition-duration: 0.4s;
+}
+button:hover {
+    background-color: white;
+    color: mediumaquamarine;
+    border: 2px solid mediumaquamarine;
+}
 td:first-of-type
 {
     text-align: left;

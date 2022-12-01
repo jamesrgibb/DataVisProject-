@@ -59,8 +59,8 @@ class Scatter {
         this.svg
             .attr('width', this.width + this.margin.left + this.margin.right)
             .attr('height', this.height + this.margin.top + this.margin.bottom)
-        d3.select('#display-graph')
-            .on('click', function (d) {
+        const button = d3.select('#display-graph')
+            button.on('click', function (d) {
                 d3.select('dot').exit().remove();
                 d3.select('#scatterY').remove()
                 d3.select('#scatterX').remove()
@@ -69,7 +69,8 @@ class Scatter {
                 return globalApplicationState.scatter.updateScatter(d3.select('#selectY-axis').property('value'),
                     d3.select('#selectX-axis').property('value'),
                     d3.select('#select-Year').property('value'))
-            })
+            });
+
         this.updateScatter('Def.Rank', 'Win', 2020)
 
     }
@@ -163,7 +164,7 @@ class Scatter {
                     .transition()
                     .delay(200)
                     .duration(200)
-                    .attr('r', 5)
+                    .attr('r', 6)
                     .style('fill', d => this.teamColor(d))
                     .style("stroke", "black"),
 
@@ -177,7 +178,7 @@ class Scatter {
                 exit => exit
                     .transition()
                     .duration(200)
-                    .attr('r', 7)
+                    .attr('r', 6)
                     .transition()
                     .delay(200)
                     .duration(200)
@@ -185,7 +186,7 @@ class Scatter {
                     .remove()
             )
             .on('mouseenter', function (d) {
-                d3.select(this).attr('r', 12)
+                d3.select(this).attr('r', 10)
                     .append('text')
                     .text('hello')
                     .transition()
@@ -193,7 +194,7 @@ class Scatter {
 
             })
             .on('mouseleave', function (d) {
-                d3.select(this).attr('r', 7)
+                d3.select(this).attr('r', 6)
                     .transition()
                     .duration(200)
                     .text('')

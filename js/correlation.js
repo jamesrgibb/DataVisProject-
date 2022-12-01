@@ -3,11 +3,11 @@ class Correlation {
         //Create a new Correlation with the given data
         this.state = state;
         this.svg = d3.select('#chart-svg');
-        this.height = 400;
-        this.width = 300;
+        this.height = 450;
+        this.width = 450;
         this.yAxisPadding = 50;
         this.xAxisPadding = 50;
-        this.margin = {left: 50, bottom: 20, top: 10, right: 20};
+        this.margin = {left: 50, bottom: 50, top: 10, right: 20};
         this.years = this.state.years;
         this.animationDuration = 250;
         this.columns = this.state.table.state.drawData.columns;
@@ -34,7 +34,7 @@ class Correlation {
             .range([this.xAxisPadding, this.width])
 
         this.svg.append('g')
-            .attr('transform', 'translate(0,' + 375 + ')')
+            .attr('transform', 'translate(0,' + (this.height-this.margin.right) + ')')
             .attr('id', 'x-axis')
             .call(d3.axisBottom(this.xAxis))
             .attr('height', 30)
@@ -42,7 +42,7 @@ class Correlation {
         this.svg
             .select('#x-axis')
             .append('text')
-            .attr('x', 150)
+            .attr('x', (this.width+this.xAxisPadding)/2)
             .attr('y', 30)
             .text('Years')
             .style('text-anchor', "middle")
@@ -52,7 +52,7 @@ class Correlation {
         //set up the y axis
         this.yAxis = d3.scaleLinear()
             .domain([0, d3.max(this.data[currentTeam][currentStat])])
-            .range([this.height - 25, this.yAxisPadding])
+            .range([this.height - 20, this.yAxisPadding])
 
         //set place holder value for the y axis
         this.svg.append('g')
@@ -68,6 +68,84 @@ class Correlation {
             .attr('fill', 'black')
             .attr('font-size', '14px')
             .attr('transform', 'rotate(-90)');
+
+
+        this.svg.append('rect')
+            .attr('id', 'clear')
+            .attr('x',(this.width-this.xAxisPadding)/2)
+            .attr('y',this.height+25)
+            .attr('rx', 4)
+            .attr('ry', 4)
+            .attr('width',100)
+            .attr('height',30)
+            .style('fill', 'mediumaquamarine')
+            .style('cursor', 'pointer')
+            .style('stroke','black')
+            .style('stroke-width','.5px')
+            .on('click', function(){
+                document.querySelectorAll('.teamline').forEach(function(d){ return d.remove();});
+            })
+            .on('mouseenter', function(){
+                d3.select(this)
+                    .transition()
+                    .duration(400)
+                    .style('fill', 'white')
+                    .style('stroke','mediumaquamarine')
+                    .style('stroke-width','1px')
+                d3.select('#clearText').style('fill','mediumaquamarine')
+            })
+            .on('mouseleave', function(){
+                d3.select(this)
+                    .transition()
+                    .duration(400)
+                    .style('fill', 'mediumaquamarine')
+                    .style('stroke','black')
+                    .style('stroke-width','.5px')
+
+                d3.select('#clearText').style('fill','white')
+            })
+
+        this.svg.append('text')
+            .attr('id','clearText')
+            .text('Clear Selection')
+            .style('text-anchor', "middle")
+            .style('font-size', '12px')
+            .attr('fill', 'white')
+            .style('text-shadow', '1px')
+            .attr('x',(this.width/2)+25)
+            .attr('y',this.height+43)
+            .on('click', function(){
+                document.querySelectorAll('.teamline').forEach(function(d){ return d.remove();});
+            })
+            .on('mouseenter', function(d){
+                d3.select('#clear')
+                    .transition()
+                    .duration(400)
+                    .style('fill', 'white')
+                    .style('stroke', 'mediumaquamarine')
+                    .style('stroke-width','1px')
+                d3.select(this)
+                    .transition()
+                    .duration(400)
+                    .style('fill','mediumaquamarine')
+            })
+            .on('mouseleave', function(){
+
+                d3.select('#clear')
+                    .transition()
+                    .duration(400)
+                    .style('fill', 'mediumaquamarine')
+                    .style('stroke','black')
+                    .style('stroke-width','.5px')
+
+                d3.select(this)
+                    .transition()
+                    .duration(400)
+                    .style('fill','white')
+            })
+            .style('cursor', 'pointer')
+
+
         // set event listener for the display graph variable
     }
 
@@ -99,12 +177,13 @@ class Correlation {
             maxValue.push(locMax)
         })
         //set up xAxis
+        //set up xAxis
         this.xAxis = d3.scaleTime()
             .domain(d3.extent(this.years))
             .range([this.xAxisPadding, this.width])
 
         this.svg.append('g')
-            .attr('transform', 'translate(0,' + 375 + ')')
+            .attr('transform', 'translate(0,' + (this.height-this.margin.right) + ')')
             .attr('id', 'x-axis')
             .call(d3.axisBottom(this.xAxis))
             .attr('height', 30)
@@ -112,7 +191,7 @@ class Correlation {
         this.svg
             .select('#x-axis')
             .append('text')
-            .attr('x', 150)
+            .attr('x', (this.width+this.xAxisPadding)/2)
             .attr('y', 30)
             .text('Years')
             .style('text-anchor', "middle")
@@ -121,7 +200,7 @@ class Correlation {
 
         this.yAxis = d3.scaleLinear()
             .domain([0, d3.max(maxValue)])
-            .range([this.height - 25, this.yAxisPadding])
+            .range([this.height - 20, this.yAxisPadding])
 
         //set tick interval
         this.svg.append('g')
@@ -174,16 +253,15 @@ class Correlation {
                         .y(function (d, i, c) {
                             return yax(d)
                         })
-
                         (list)
                 })
                 .text(function (d, i, c) {
                     return d
                 })
             this.svg.selectAll("line")
-                .data(this.data[k][corrStat])
                 .enter()
                 .append("text")
+                .text(k)
         }
 
     }
