@@ -4,9 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <title>Visualization - Final Project - Collegiate Football Ranking </title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css"/>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css?family=Work+Sans:400,700&display=swap" rel="stylesheet">
@@ -23,58 +25,61 @@
 <div class="view">
     <h2>Does Defense Really Win Championships?</h2>
     <p>
-        Exploration of collegiate football statistics. Data take from  <a href="https://www.kaggle.com/datasets/jeffgallini/college-football-team-stats-2019?select=cfb14.csv">Kaggle </a>
+        Exploration of collegiate football statistics. Data take from <a
+            href="https://www.kaggle.com/datasets/jeffgallini/college-football-team-stats-2019?select=cfb14.csv">Kaggle </a>
     </p>
     <div style="width: fit-content">
-    <div class="view1" id="table-div" style="margin-left: 15px;width: 750px; height: 500px; padding: 10px;overflow: auto;">
-        <table id="rankTable">
-            <thead>
-            <tr id="columnHeaders">
-            </tr>
-            </thead>
-            <tbody id="rankTableBody">
-            </tbody>
-        </table>
-    </div>
-    <div class="view1" id="chart-div" style="margin-left: 15px;width: 500px; height: 500px; padding: 10px;">
-        <svg id="chart-svg" style=" margin: 10px">
-        </svg>
+        <div class="view1" id="table-div"
+             style="margin-left: 15px;width: 750px; height: 500px; padding: 10px;overflow: auto;">
+            <table id="rankTable">
+                <thead>
+                <tr id="columnHeaders">
+                </tr>
+                </thead>
+                <tbody id="rankTableBody">
+                </tbody>
+            </table>
+        </div>
+        <div class="view1" id="hist-div">
+            <svg id="hist-svg" style="margin: 10px">
 
-    </div>
-    <div class="view2" id="hist-div" >
-        <svg id="hist-svg" style="margin: 10px">
+            </svg>
 
-        </svg>
+        </div>
+    </div>
+    <div  style="width: fit-content; height: fit-content" class="view3">
+        <div class="view2" id="chart-div" style="margin-left: 15px;width: 500px; height: 500px; padding: 10px;">
+            <svg id="chart-svg" style=" margin: 10px">
+            </svg>
 
-    </div>
-    </div>
-    <div class="view2" id="scatter-div" style="margin-left: 15px;width:600px; height: 600px; padding: 10px;">
-        <select selected ="selectX-axis" id="selectX-axis">
-            <option value="none" selected disabled hidden>
-                X-Axis
-            </option>
-        </select>
-        <select id ="selectY-axis" >
-            <option value="none" selected disabled hidden>
-                Y-Axis
-            </option>
-        </select>
-        <select id ="select-Year" >
-            <option value="none" selected disabled hidden>
-               Year
-            </option>
+        </div>
+        <div class="view2" id="scatter-div" style="margin-left: 15px;width:600px; height: 600px; padding: 10px;">
+            <select selected="selectX-axis" id="selectX-axis">
+                <option value="none" selected disabled hidden>
+                    X-Axis
+                </option>
             </select>
-        <button id="display-graph">Display Graph</button>
-        <svg id="scatter-svg" style=" margin: 10px">
-        </svg>
+            <select id="selectY-axis">
+                <option value="none" selected disabled hidden>
+                    Y-Axis
+                </option>
+            </select>
+            <select id="select-Year">
+                <option value="none" selected disabled hidden>
+                    Year
+                </option>
+            </select>
+            <button id="display-graph">Display Graph</button>
+            <svg id="scatter-svg" style=" margin: 10px">
+            </svg>
+        </div>
     </div>
-
-</div>
-<link rel="stylesheet" href="style.css"/>
-<script src="js/scatter.js"></script>
-<script src="js/table.js"></script>
-<script src="js/correlation.js"></script>
-<script src="js/histogram.js"></script>
-<script src="js/script.js"></script>
+    </div>
+    <link rel="stylesheet" href="style.css"/>
+    <script src="js/scatter.js"></script>
+    <script src="js/table.js"></script>
+    <script src="js/correlation.js"></script>
+    <script src="js/histogram.js"></script>
+    <script src="js/script.js"></script>
 </body>
 </html>

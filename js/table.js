@@ -48,7 +48,12 @@ class Table {
         let headers = d3.select("#columnHeaders");
         headers.selectAll('td')
             .data(array)
-            .join('td').text(d => {
+            .join('td')
+            .attr('id',d=> {
+                d =d.replaceAll(".","-")
+                return `${d}-header`
+            })
+            .text(d => {
             return d.replaceAll('.', ' ')
         })
         headers.selectAll('td').style('font-size', '11px')
@@ -134,8 +139,6 @@ class Table {
                     return d.team + " " + d.column
                 }
             })
-            //TODO: move the defensive and offense selection out of the chart scrolling
-            //TODO: make the lines update dynamically when a new selection is made
             .on('click', function (d) {
                 let col = d['path'][0].__data__.column
                 let team = d['path'][0].__data__.team
@@ -167,10 +170,12 @@ class Table {
 
     sortTable(colName) {
         // clicking on already sorted column
+        let colId = colName.replaceAll(".", "-")
+        d3.select("#columnHeaders").selectAll("td").attr('class','sortable')
+        d3.select(`#${colId}-header`).attr('class','sortable sorting')
+        console.log(colId)
         if (this.sortState.column === colName) {
-
             if (this.sortState.ascending === true) {
-
                 this.sortState.ascending = false;
                 this.state.drawData.sort((a, b) =>
                     d3.descending(+a[colName], +b[colName])

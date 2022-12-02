@@ -109,7 +109,10 @@ loadData().then((dataA) => {
     d3.select("#season").on("change", changeSeasonHandler)
     d3.select("#grouping").on("change", changeGroupingHandler)
     // sort handler
-    d3.select("#columnHeaders").selectAll("td").on("click", sortHandler)
+    d3.select("#columnHeaders").selectAll("td")
+        .attr("class", "sortable")
+        .on("click",
+        sortHandler)
 
 });
 

@@ -4,10 +4,10 @@ class Scatter {
         this.data = state.chartData;
         this.svg = d3.select('#scatter-svg');
         this.height = 400;
-        this.width = 300;
+        this.width = 400;
         this.yAxisPadding = 50;
         this.xAxisPadding = 50;
-        this.margin = {left: 50, bottom: 20, top: 10, right: 20};
+        this.margin = {left: 50, bottom: 50, top: 10, right: 20};
         this.yearsDisplayed = state.years
         this.years = {0: 2012,1:2013,2:2014,3:2015,4:2016,5:2017,6:2018,7:2019}
         this.yAxis = null;

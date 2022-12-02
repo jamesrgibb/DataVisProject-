@@ -60,8 +60,25 @@ tbody tr {
     cursor: pointer;
 }
 
-tbody tr:hover {
-    background-color: #efefef !important;
+
+.sorting {
+    background: black;
+    color: white;
+}
+
+.sortable {
+    user-select: none;
+    border-radius: 3px;
+    cursor: pointer;
+    padding: 6px;
+}
+
+.sortable:hover {
+    background: #d1d1d1;
+}
+
+.sortable.sorting:hover {
+    background: #232323;
 }
 
 table > .label{

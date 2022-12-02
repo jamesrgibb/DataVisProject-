@@ -12,7 +12,6 @@ class Histogram{
 
         this.vizWidth = 200
         this.visHeight = 200
-
         d3.select("#hist-div").attr("height", this.visHeight + 30).attr("width", this.vizWidth + 30)
 
         this.currentTeam = "Alabama"
@@ -88,6 +87,7 @@ class Histogram{
 
         svg.attr("height", this.visHeight)
         svg.attr("width", this.vizWidth)
+
 
         // if axis exists, needs removal
         svg.select("#hist-x-axis").remove()
