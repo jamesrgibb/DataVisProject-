@@ -4,7 +4,7 @@ class Correlation {
         this.state = state;
         this.svg = d3.select('#chart-svg');
         this.height = 400;
-        this.width = 500;
+        this.width = 400;
         this.yAxisPadding = 50;
         this.xAxisPadding = 50;
         this.labelBoxWidth = 150;
@@ -30,7 +30,7 @@ class Correlation {
         //set up xAxis
         this.xAxis = d3.scaleTime()
             .domain(d3.extent(this.years))
-            .range([this.xAxisPadding, this.width - this.labelBoxWidth])
+            .range([this.xAxisPadding, this.width])
 
         this.svg.append('g')
             .attr('transform', 'translate(0,' + (this.height - this.margin.right) + ')')
@@ -41,7 +41,7 @@ class Correlation {
         this.svg
             .select('#x-axis')
             .append('text')
-            .attr('x', (this.width + this.xAxisPadding) / 2)
+            .attr('x', (this.width) / 1.75)
             .attr('y', 30)
             .text('Years')
             .style('text-anchor', "middle")
@@ -59,24 +59,27 @@ class Correlation {
             .attr('transform', 'translate(' + this.yAxisPadding + ',0)')
             .attr('width', 100)
             .call(d3.axisLeft(this.yAxis))
+
         //set placeholder value for the y-axis label
         this.svg.select('#y-axis')
             .append('text')
-            .attr('x', -200)
+            .attr('x', this.width/2.8)
             .attr('y', -40)
             .attr('fill', 'black')
             .attr('font-size', '14px')
+            .attr('text-anchor', 'middle')
             .attr('transform', 'rotate(-90)');
 
 
         this.svg.append('rect')
             .attr('id', 'clear')
-            .attr('x', (this.width - this.xAxisPadding) / 2)
+            .attr('x', (this.width) / 2.2)
             .attr('y', this.height + 25)
             .attr('rx', 4)
             .attr('ry', 4)
             .attr('width', 100)
             .attr('height', 30)
+            .style('anchor','middle')
             .style('fill', 'mediumaquamarine')
             .style('cursor', 'pointer')
             .style('stroke', 'black')
@@ -102,7 +105,6 @@ class Correlation {
                     .style('fill', 'mediumaquamarine')
                     .style('stroke', 'black')
                     .style('stroke-width', '.5px')
-
                 d3.select('#clearText').style('fill', 'white')
             })
 
@@ -113,7 +115,7 @@ class Correlation {
             .style('font-size', '12px')
             .attr('fill', 'white')
             .style('text-shadow', '1px')
-            .attr('x', (this.width / 2) + 25)
+            .attr('x', (this.width) / 1.75+4)
             .attr('y', this.height + 43)
             .on('click', function () {
                 document.querySelectorAll('.teamline').forEach(function (d) {
@@ -157,6 +159,9 @@ class Correlation {
             document.querySelectorAll('.teamLabel').forEach(function (d) {
                 return d.remove();
             });
+            document.querySelectorAll('.average').forEach(function (d) {
+                return d.remove();
+            });
             document.querySelectorAll('.teamCircle').forEach(function (d) {
                 return d.remove();
             });
@@ -165,6 +170,9 @@ class Correlation {
             d3.select('#y-axis').text('');
             globalApplicationState.correlationState.selectedTeams.add(currentTeam);
         } else {
+            document.querySelectorAll('.average').forEach(function (d) {
+                return d.remove();
+            });
             document.querySelectorAll('.teamline').forEach(function (d) {
                 return d.remove();
             });
@@ -182,7 +190,6 @@ class Correlation {
             globalApplicationState.correlationState.selectedTeams.add(currentTeam);
         }
         const teams = Object.keys(this.data)
-        const stats = Object.keys(this.data.Akron)
         const xax = this.xAxis
         let maxValue = []
         globalApplicationState.correlationState.selectedTeams.forEach(function (d) {
@@ -193,7 +200,7 @@ class Correlation {
         //set up xAxis
         this.xAxis = d3.scaleTime()
             .domain(d3.extent(this.years))
-            .range([this.xAxisPadding, this.width - this.labelBoxWidth])
+            .range([this.xAxisPadding, this.width])
 
         this.svg.append('g')
             .attr('transform', 'translate(0,' + (this.height - this.margin.right) + ')')
@@ -204,7 +211,7 @@ class Correlation {
         this.svg
             .select('#x-axis')
             .append('text')
-            .attr('x', (this.width + this.xAxisPadding) / 2)
+            .attr('x', (this.width) / 1.75)
             .attr('y', 30)
             .text('Years')
             .style('text-anchor', "middle")
@@ -285,37 +292,34 @@ class Correlation {
                 .style('stroke', 'black')
 
 
-            this.svg.append('text')
-                .attr('id', `label-${k}`)
-                .attr('class', 'teamLabel')
-                .attr('x', 5+xax(globalApplicationState.years[globalApplicationState.years.length - 2]))
-                .attr('y', yax(lastIdx))
-                .style('fill',teamColor(k))
-                .text(k)
+           // this.svg.append('text')
+           //      .attr('id', `label-${k}`)
+           //      .attr('class', 'teamLabel')
+           //      .attr('x', 5+xax(globalApplicationState.years[globalApplicationState.years.length - 2]))
+           //      .attr('y', yax(lastIdx))
+           //      .style('fill',teamColor(k))
+           //      .text(k)
 
-            // this.svg.append('rect')
-            //     .attr('id', 'legend')
-            //     .attr('class', 'teamLabel')
-            //     .attr('x', (this.width) - this.labelBoxWidth + 10)
-            //     .attr('y', this.height / 1.6)
-            //     .attr('width', 125)
-            //     .attr('height', this.height - 20 - (this.height / 1.6))
-            //     .style('fill', 'white')
-            //     .style('overflow', 'auto')
-            //     .style('stroke', 'gray')
-            d3.select()
+               d3.select('#legendTable')
+                .style('margin-left', 'auto')
+                .style('margin-right', 'auto')
+
             let lh = d3.select('#legendHeaders')
             lh.style('font-weight', 'bold')
-                .style('font-decoration','underline')
+                .style('font-size','16px')
+
             let legendCol = ['Team','Average']
             lh.selectAll('td')
                 .data(legendCol)
                 .join('td')
                 .text(d=>d)
+                .attr('class', 'legendHeaders')
+
             let legendRow = d3.select('#legendBody')
                 .selectAll('tr')
                 .data(Object.keys(avgs))
                 .join('tr')
+            let teamSafeName
             let legendCells =
                 legendRow.selectAll('td')
                     .data(function (a) {
@@ -329,13 +333,13 @@ class Correlation {
                         })
                     })
                     .join('td')
-                    .attr('id', function(d){
-                        return `${d.team}-average`
-                    })
+                    .attr('class', 'average')
                     .text(function (d){
                         return d.value
                     })
-                    .style('fill',function (d){
+                    .style('font-size', '14px')
+                    .style('border','1')
+                    .style('background-color',function (d) {
                         return teamColor(d.team)
                     })
 

@@ -1,8 +1,8 @@
 /* DATA LOADING */
-async function loadData () {
+async function loadData() {
     const dataset_array = []
     let logos = []
-    logos =  await d3.json('data/cfb_logos.json')
+    logos = await d3.json('data/cfb_logos.json')
     for (let i = 13; i < 21; i++) {
 
         path = `data/TeamStats/cfb${i}.csv`
@@ -12,8 +12,8 @@ async function loadData () {
         //cleanDataFrame(dataset);
 
         // Index column in cfb21 needs to be removed
-        if(i == 21){
-            dataset.columns.splice(0,1);
+        if (i == 21) {
+            dataset.columns.splice(0, 1);
         }
 
         // append dataset to collection
@@ -21,9 +21,8 @@ async function loadData () {
     }
 
 
-
     // returns 9 len array, each element is full dataset from one season
-    return [logos,dataset_array];
+    return [logos, dataset_array];
 }
 
 
@@ -63,15 +62,16 @@ loadData().then((dataA) => {
     globalApplicationState.missingTeamData = formatYearColumn(globalApplicationState.teamMap);
     globalApplicationState.teamMap.columns = loadedData.columns;
     globalApplicationState.chartData = parseStats(globalApplicationState.teamMap);
-    globalApplicationState.logos = logoDataStructure(globalApplicationState.chartData,dataA[0])
+    globalApplicationState.logos = logoDataStructure(globalApplicationState.chartData, dataA[0])
     const defaultState = {
-        drawData: globalApplicationState.data[loadedData.length-1],
-        tableData: globalApplicationState.data[loadedData.length-1],
+        drawData: globalApplicationState.data[loadedData.length - 1],
+        tableData: globalApplicationState.data[loadedData.length - 1],
         currentGrouping: "offense",
         seasonalData: loadedData,
         selectedStat: '',
         selectedTeams: new Set(),
     }
+
 
     // set default team data across all 9 seasons
     globalApplicationState.tableState = defaultState;
@@ -83,7 +83,7 @@ loadData().then((dataA) => {
     globalApplicationState.table = new Table(globalApplicationState)
 
     // initialize correlation
-    globalApplicationState.years =  [new Date('2013'), new Date('2014'), new Date('2015'), new Date('2016'), new Date('2017'), new Date('2018'), new Date('2019'), new Date('2020'), new Date('2021')]
+    globalApplicationState.years = [new Date('2013'), new Date('2014'), new Date('2015'), new Date('2016'), new Date('2017'), new Date('2018'), new Date('2019'), new Date('2020'), new Date('2021')]
     globalApplicationState.correlation = new Correlation(globalApplicationState)
 
     // initialize histogram
@@ -99,17 +99,17 @@ loadData().then((dataA) => {
     tablediv.insert("select", "table").attr('name', "season").attr("id", "season").selectAll("option").data(seasons)
         .join("option").attr("value", d => d).attr("selected", d => d === "20" ? "selected" : "").text(d => "20" + d);
 
-    let histResOptions = [5, 6, 7, 8, 9 ,10]
+    let histResOptions = [5, 6, 7, 8, 9, 10]
     let histDiv = d3.select("#hist-div")
     histDiv.insert("label", "svg").attr("for", "resolution").text("Resolution: ")
     histDiv.insert("select", "svg").attr("name", "resolution").attr("id", "res-button").selectAll("option").data(histResOptions)
-        .join("option").attr("value", d=> d).attr("selected", d=> d === 5 ? "selected" : "").text(d => String(d))
+        .join("option").attr("value", d => d).attr("selected", d => d === 5 ? "selected" : "").text(d => String(d))
 
     // add dropdown to select column grouping
     tablediv.insert("label", "table").attr("for", "grouping").text("Choose Grouping:")
     tablediv.insert("select", "table").attr('name', "grouping").attr("id", "grouping").selectAll("option").data(["offense", "defense"])
         .join("option").attr("value", d => d).text(d => d);
-    tablediv.selectAll("label").style('margin','10px')
+    tablediv.selectAll("label").style('margin', '10px')
 
     // attach handler to select
     d3.select("#season").on("change", changeSeasonHandler)
@@ -117,8 +117,8 @@ loadData().then((dataA) => {
     d3.select("#res-button").on("change", changeHistResHandler)
 
     // sort handler
-    // d3.select("#columnHeaders").selectAll("td")
-    //     .attr("class", "sortable")
+    d3.select("#columnHeaders").selectAll("td")
+        .attr("class", "sortable")
     //     .on("click",
     //     sortHandler)
 
@@ -129,13 +129,14 @@ function sortHandler(d) {
     globalApplicationState.table.sortTable(this.__data__)
 }
 
-function changeHistResHandler(d){
-  globalApplicationState.histogram.setResolution(parseInt(this.value))
+function changeHistResHandler(d) {
+    globalApplicationState.histogram.setResolution(parseInt(this.value))
 }
 
-function changeGroupingHandler(d){
+function changeGroupingHandler(d) {
     globalApplicationState.table.changeGrouping(this.value)
 }
+
 function changeSeasonHandler(d) {
 
     globalApplicationState.table.changeSeason(this.value)
@@ -257,7 +258,6 @@ function parseStats(data) {
         const touchdowns_allowed = []
 
 
-
         team.forEach(function (year) {
             Win.push(parseInt(year[0].Win))
             Loss.push(parseInt(year[0].Loss))
@@ -364,23 +364,24 @@ function parseStats(data) {
         teamStats[team[0][0].Team].total_tds_allowed = total_tds_allowed
         teamStats[team[0][0].Team].yards_attempt_allowed = yards_attempt_allowed
         teamStats[team[0][0].Team].yards_completion_allowed = yards_completion_allowed
-        teamStats[team[0][0].Team].pass_yards_per_game_allowed =pass_yards_per_game_allowed
+        teamStats[team[0][0].Team].pass_yards_per_game_allowed = pass_yards_per_game_allowed
         teamStats[team[0][0].Team].avg_points_per_game_allowed = avg_points_per_game_allowed
         teamStats[team[0][0].Team].points_allowed = points_allowed
-        teamStats[team[0][0].Team].rush_yards_per_game_allowed =rush_yards_per_game_allowed
+        teamStats[team[0][0].Team].rush_yards_per_game_allowed = rush_yards_per_game_allowed
         teamStats[team[0][0].Team].touchdowns_allowed = touchdowns_allowed
 
     })
     return teamStats
 }
-function logoDataStructure(teamName, dataA){
+
+function logoDataStructure(teamName, dataA) {
     let team = {}
     let nm = Object.keys(teamName)
-    dataA.forEach(function(d){
+    dataA.forEach(function (d) {
         let v = d.school
-        v = v.replace("State","St.")
-        v = v.replaceAll("Army","Army West Point")
-        v = v.replaceAll("Central Michigan","Central Mich.")
+        v = v.replace("State", "St.")
+        v = v.replaceAll("Army", "Army West Point")
+        v = v.replaceAll("Central Michigan", "Central Mich.")
         v = v.replaceAll("Florida International", "FIU")
         v = v.replaceAll("Florida Atlantic", "Fla. Atlantic")
         v = v.replaceAll("UMass", "Massachusetts")
@@ -393,20 +394,20 @@ function logoDataStructure(teamName, dataA){
         v = v.replaceAll("Western Kentucky", "Western Ky.")
         v = v.replaceAll("Eastern Michigan", "Eastern Mich.")
         v = v.replaceAll("Western Michigan", "Western Mich.")
-        if(v.includes("Miami")){
-            if(v.length === 5){
-                v = v.replaceAll("Miami","Miami (ACC)")
-            }
-            else{
-                v = v.replaceAll("Miami (OH)","Miami (MAC)")
+        if (v.includes("Miami")) {
+            if (v.length === 5) {
+                v = v.replaceAll("Miami", "Miami (ACC)")
+            } else {
+                v = v.replaceAll("Miami (OH)", "Miami (MAC)")
             }
         }
-        if(v.includes("NC St.")){
+        if (v.includes("NC St.")) {
             v = v.replaceAll("NC St.", "NC State")
         }
-        if(nm.includes(v)) {
+        if (nm.includes(v)) {
             team[`${v}`] = d.logo
         }
     })
     return team
 }
+

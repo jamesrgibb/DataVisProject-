@@ -18,17 +18,7 @@ th {
     min-width: 50px;
     background: rgb(248, 248, 248);
 }
-div.tooltip {
-    position: absolute;
-    text-align: center;
-    padding: .5rem;
-    background: #FFFFFF;
-    color: #313639;
-    border: 1px solid #313639;
-    border-radius: 8px;
-    pointer-events: none;
-    font-size: 1.3rem;
-}
+
 
 .view1{
     display: inline-block;
@@ -91,7 +81,18 @@ tbody tr {
 .sortable.sorting:hover {
     background: #232323;
 }
+.sc{
+    display: inline-block;
+}
+.legendHeaders{
+    border: 1px solid;
+    border-bottom: 2px solid
 
+}
+
+.average{
+    border: 1px solid;
+}
 table > .label{
     text-anchor: middle;
 }

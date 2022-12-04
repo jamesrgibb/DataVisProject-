@@ -32,6 +32,13 @@ class Table {
             offense: ["Team", "Win", "Loss", ...offCol],
             defense: ["Team", "Win", "Loss", ...defCol]
         }
+
+
+        // scales
+        // TODO ...............
+        //''''''''''''''''''
+
+
         this.drawTable();
     }
 
@@ -159,8 +166,8 @@ class Table {
                 }
             });
 
-            // sort handler
-            d3.select("#columnHeaders").selectAll("td")
+        // sort handler
+        d3.select("#columnHeaders").selectAll("td")
             .attr("class", "sortable")
             .on("click", sortHandler)
 
@@ -171,7 +178,6 @@ class Table {
         let colId = colName.replaceAll(".", "-")
         d3.select("#columnHeaders").selectAll("td").attr('class','sortable')
         d3.select(`#${colId}-header`).attr('class','sortable sorting')
-        console.log(colId)
         if (this.sortState.column === colName) {
             if (this.sortState.ascending === true) {
                 this.sortState.ascending = false;

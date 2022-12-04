@@ -3,8 +3,8 @@ class Scatter {
         this.state = state;
         this.data = state.chartData;
         this.svg = d3.select('#scatter-svg');
-        this.height = 400;
-        this.width = 400;
+        this.height = 600;
+        this.width = 600;
         this.yAxisPadding = 50;
         this.xAxisPadding = 50;
         this.margin = {left: 50, bottom: 50, top: 10, right: 20};
@@ -18,15 +18,17 @@ class Scatter {
         this.columns = state.scatterState.drawData.columns
         let columns = state.scatterState.drawData.columns
         this.drawData = state.scatterState.drawData.filter(d => !state.missingTeamData.includes(d.Team))
-        this.scatterData = d3.rollup(this.drawData, function (v) {
-                let reducedMap = new Map()
-                columns.forEach(function (col) {
-                    reducedMap.set(col, v[0][col])
-                })
-                return Object.fromEntries(reducedMap)
-            },
-            d => d.Team
-        )
+        this.svg.style('margin-left', 'auto')
+            .style('margin-right', 'auto')
+        // this.scatterData = d3.rollup(this.drawData, function (v) {
+        //         let reducedMap = new Map()
+        //         columns.forEach(function (col) {
+        //             reducedMap.set(col, v[0][col])
+        //         })
+        //         return Object.fromEntries(reducedMap)
+        //     },
+        //     d => d.Team
+        // )
         d3.select('#selectY-axis')
             .selectAll('myOptions')
             .data(this.columns)
@@ -46,7 +48,6 @@ class Scatter {
             .attr('value', function (d) {
                 return d
             })
-        //TODO: edit list showing to only show the stats on the table
         d3.select('#selectX-axis')
             .selectAll('myOptions')
             .data(this.columns)
@@ -109,15 +110,15 @@ class Scatter {
             defaultTriple.push([d,this.data[d][xStat][yearStat], this.data[d][yStat][yearStat]])
         }
         this.xAxis = d3.scaleLinear()
-            .domain([0, d3.max(xa)])
+            .domain([d3.min(xa), d3.max(xa)])
             .range([this.xAxisPadding, this.width])
 
         this.yAxis = d3.scaleLinear()
-            .domain([0, d3.max(ya)])
+            .domain([d3.min(ya), d3.max(ya)])
             .range([this.height - 25, this.yAxisPadding])
 
         this.svg.append('g')
-            .attr('transform', 'translate(0,' + 375 + ')')
+            .attr('transform', 'translate(0,' + (this.height-25) + ')')
             .attr('id', 'scatterX')
             .call(d3.axisBottom(this.xAxis))
         this.svg
@@ -168,16 +169,20 @@ class Scatter {
                 return ys
             })
             .style('text-anchor', "middle");
-        let hoverbx = d3.select('#scatter-svg').append('div').attr('class', 'tooltip')
-            .style('opacity',0)
+
+        let div = d3.select(".tooltip")
+            .style("opacity", 1e-6)
 
         this.svg.append('g')
             .selectAll('circle')
             .data(defaultTriple)
             .join(
+
                 enter => enter
                     .append('circle')
-                    .attr('id', d=>`${d[0]}-dot`)
+                    .attr('id', d=>{
+                        return `${d[0]}-dot`
+                    })
                     .attr('cx', (d) => this.xAxis(d[1]))
                     .attr('cy', (d) => this.yAxis(d[2]))
                     .attr('r', 0)
@@ -209,76 +214,47 @@ class Scatter {
                     .remove()
             )
             .on('mouseover', function (d) {
-                console.log(d)
                 d3.select(this).attr('r', 10)
-                    .append('text')
                     .transition()
-                    .duration(200)
-                d3.select(this).transition()
-                    .duration('50')
-                    .attr('opacity', '.85');
-                hoverbx.transition()
-                    .duration(50)
-                    .style("opacity", 1);
-                hoverbx.html(d.srcElement.__data__[0])
-                    .style("left", (d3.event.pageX + 10) + "px")
-                    .style("top", (d3.event.pageY - 15) + "px");
-                // hoverbx.transition().duration(200)
-                //     .style('opacity',1)
-                // hoverbx.html(d.srcElement.__data__[0])
-                //     .style("left",(d.screenX+10)+"px")
-                //     .style("top",(d.screenY-15)+ "px")
+                    .duration(500)
+                let string = "<img SameSite=None src=" + globalApplicationState.logos[d.path[0].__data__[0]] + " style= width='100px' height='100px'>"
+                div.html(string)
+                    .transition()
+                    .duration(500)
+                    .style("opacity", 1)
+                d3.select('#schoolLogo').append('text').text(function () {
+                    function stringSetter(stat, clIndicator) {
+                        let ys = stat
+                        ys = ys.replaceAll("_", " ")
+                        ys = ys.replaceAll("def", "Defensive")
+                        ys = ys.replaceAll("off", "Offensive")
+                        ys = ys.replaceAll("tds", "Touchdowns")
+                        ys = ys.replaceAll("opp", "Opponent")
+                        ys = ys.replaceAll("yds", "Yards")
+                        ys = ys.replaceAll("win", "Win")
+                        let indicator
+                        if(clIndicator === 'x'){
+                            indicator = d.path[0].__data__[1]
+                        }
+                        else{
+                            indicator = d.path[0].__data__[2]
+                        }
+                        return ys + ': ' + indicator
+                    }
+                    let ystring = stringSetter(yStat,'y')
+                    let xstring = stringSetter(xStat, 'x')
+                    return `${xstring}  
+                        ${ystring}`
+                })
             })
             .on('mouseout', function (d) {
                 d3.select(this).attr('r', 6)
                     .transition()
                     .duration(200)
-                // hoverbx.transition().duration(200)
-                //     .style('opacity', 0 )
-                d3.select(this).transition()
-                    .duration('50')
-                    .attr('opacity', '1');
-                hoverbx.transition()
-                    .duration('50')
-                    .style("opacity", 0);
+                div.transition()
+                    .duration(500)
+                    .style("opacity", 1e-6);
             });
-
-        // this.svg.selectAll('circle')
-        //     .on('mouseover', function (d,i,cir) {
-        //         console.log(d)
-        //         console.log(i[0])
-        //         let xSelect =globalApplicationState.correlation.xAxis(d.clientX + 10)
-        //         let ySelect =globalApplicationState.correlation.yAxis(d.clientY+ 10)
-        //         d3.select(`#${i[0]}-dot`).attr('transform', 'translate('+xSelect+', '+ySelect+') scale(1,1)')
-        //         d3.select(`#hoverbx rect`).attr('fill','white')
-        //             .attr('opacity',0.75)
-        //         d3.select('#teambx').text(i[0])
-        //         d3.select('#hoverbx').text(i[1],i[2])
-        //     })
-        //     .on('mouseout', function (d,i,cir) {
-        //         d3.selectAll('#hoverbx text').text('')
-        //         d3.selectAll('#hoverbx rect').attr('opacity', 0)
-        //     })
-        // let logo = this.svg.append('g').attr('id','hoverbx')
-        //     logo.append('rect')
-        //         .attr('width',50)
-        //         .attr('height',50)
-        //         .attr('rx','25')
-        //         .attr('fill', 'none')
-        //
-        // logo.append('text')
-        //     .attr('id','teambx')
-        //     .attr('x', '25')
-        //     .attr('y', '25')
-        //     .attr('text-anchor', 'middle')
-        //     .style('font-size', '30')
-        //
-        // logo.append('text')
-        //     .attr('id', 'hoverbx')
-        //     .attr('x', 25)
-        //     .attr('y', 15)
-        //     .attr('text-anchor', 'middle')
-        //     .style('font-size', '20')
     }
 
 
