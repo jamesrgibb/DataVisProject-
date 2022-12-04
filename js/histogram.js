@@ -91,15 +91,15 @@ class Histogram{
 
         // if axis exists, needs removal
         svg.select("#hist-x-axis").remove()
-        svg.select("#hist-y-axis").remove()
+        //svg.select("#hist-y-axis").remove()
         
         
         svg.append('g').call(d3.axisBottom(x).tickValues(thresholds))
         .attr("id", "hist-x-axis")
         .attr("transform", `translate(0, ${this.visHeight - this.margin.bottom})`)
-        svg.append('g').call(d3.axisLeft(y))
-        .attr("id", "hist-y-axis")
-        .attr("transform", `translate(${this.margin.left}, 0)`)
+        // svg.append('g').call(d3.axisLeft(y))
+        // .attr("id", "hist-y-axis")
+        // .attr("transform", `translate(${this.margin.left}, 0)`)
 
         let height = this.visHeight - this.margin.bottom
         let bottomAdjust = this.margin.top - this.margin.bottom 
