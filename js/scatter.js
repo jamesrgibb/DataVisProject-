@@ -35,11 +35,12 @@ class Scatter {
             .text(function (d) {
                 let ys = d
                 ys = ys.replaceAll(".", " ")
-                ys = ys.replaceAll("Def", "Defensive")
-                ys = ys.replaceAll("Off", "Offensive")
-                ys = ys.replaceAll("TDs", "Touchdowns")
-                ys = ys.replaceAll("Opp", "Opponent")
-                ys = ys.replaceAll("Yds", "Yards")
+                ys = ys.replaceAll("def", "Defensive")
+                ys = ys.replaceAll("off", "Offensive")
+                ys = ys.replaceAll("tds", "Touchdowns")
+                ys = ys.replaceAll("opp", "Opponent")
+                ys = ys.replaceAll("yds", "Yards")
+                ys = ys.replaceAll("win", "Win")
                 return ys
             })
             .attr('value', function (d) {
@@ -122,16 +123,18 @@ class Scatter {
         this.svg
             .select('#scatterX')
             .append('text')
-            .attr('x', 150)
-            .attr('y', 30)
+            .attr('x', (this.width/1.75))
+            .attr('y', 35)
             .text(function () {
                 let xs = xStat
-                xs = xs.replaceAll(".", " ")
-                xs = xs.replaceAll("Def", "Defensive")
-                xs = xs.replaceAll("Off", "Offensive")
-                xs = xs.replaceAll("TDs", "Touchdowns")
-                xs = xs.replaceAll("Opp", "Opponent")
-                xs = xs.replaceAll("Yds", "Yards")
+                xs = xs.replaceAll("_", " ")
+                xs = xs.replaceAll("def", "Defensive")
+                xs = xs.replaceAll("off", "Offensive")
+                xs = xs.replaceAll("tds", "Touchdowns")
+                xs = xs.replaceAll("opp", "Opponent")
+                xs = xs.replaceAll("yds", "Yards")
+                xs = xs.replaceAll("rank", "Rank")
+                xs = xs.replaceAll("win", "Win")
                 return xs
 
             })
@@ -148,23 +151,25 @@ class Scatter {
 
         this.svg.select('#scatterY')
             .append('text')
-            .attr('x', -200)
-            .attr('y', -40)
+            .attr('x', -(this.height / 2))
+            .attr('y', -30)
             .attr('fill', 'black')
             .attr('font-size', '14px')
             .attr('transform', 'rotate(-90)')
             .text(function () {
                 let ys = yStat
-                ys = ys.replaceAll(".", " ")
-                ys = ys.replaceAll("Def", "Defensive")
-                ys = ys.replaceAll("Off", "Offensive")
-                ys = ys.replaceAll("TDs", "Touchdowns")
-                ys = ys.replaceAll("Opp", "Opponent")
-                ys = ys.replaceAll("Yds", "Yards")
+                ys = ys.replaceAll("_", " ")
+                ys = ys.replaceAll("def", "Defensive")
+                ys = ys.replaceAll("off", "Offensive")
+                ys = ys.replaceAll("tds", "Touchdowns")
+                ys = ys.replaceAll("opp", "Opponent")
+                ys = ys.replaceAll("yds", "Yards")
+                ys = ys.replaceAll("win", "Win")
                 return ys
             })
             .style('text-anchor', "middle");
-
+        let hoverbx = d3.select('#scatter-svg').append('div').attr('class', 'tooltip')
+            .style('opacity',0)
 
         this.svg.append('g')
             .selectAll('circle')
@@ -172,6 +177,7 @@ class Scatter {
             .join(
                 enter => enter
                     .append('circle')
+                    .attr('id', d=>`${d[0]}-dot`)
                     .attr('cx', (d) => this.xAxis(d[1]))
                     .attr('cy', (d) => this.yAxis(d[2]))
                     .attr('r', 0)
@@ -202,20 +208,77 @@ class Scatter {
                     .attr('r', 0)
                     .remove()
             )
-            .on('mouseenter', function (d) {
+            .on('mouseover', function (d) {
+                console.log(d)
                 d3.select(this).attr('r', 10)
                     .append('text')
-                    .text('hello')
                     .transition()
                     .duration(200)
-
+                d3.select(this).transition()
+                    .duration('50')
+                    .attr('opacity', '.85');
+                hoverbx.transition()
+                    .duration(50)
+                    .style("opacity", 1);
+                hoverbx.html(d.srcElement.__data__[0])
+                    .style("left", (d3.event.pageX + 10) + "px")
+                    .style("top", (d3.event.pageY - 15) + "px");
+                // hoverbx.transition().duration(200)
+                //     .style('opacity',1)
+                // hoverbx.html(d.srcElement.__data__[0])
+                //     .style("left",(d.screenX+10)+"px")
+                //     .style("top",(d.screenY-15)+ "px")
             })
-            .on('mouseleave', function (d) {
+            .on('mouseout', function (d) {
                 d3.select(this).attr('r', 6)
                     .transition()
                     .duration(200)
-                    .text('')
+                // hoverbx.transition().duration(200)
+                //     .style('opacity', 0 )
+                d3.select(this).transition()
+                    .duration('50')
+                    .attr('opacity', '1');
+                hoverbx.transition()
+                    .duration('50')
+                    .style("opacity", 0);
             });
+
+        // this.svg.selectAll('circle')
+        //     .on('mouseover', function (d,i,cir) {
+        //         console.log(d)
+        //         console.log(i[0])
+        //         let xSelect =globalApplicationState.correlation.xAxis(d.clientX + 10)
+        //         let ySelect =globalApplicationState.correlation.yAxis(d.clientY+ 10)
+        //         d3.select(`#${i[0]}-dot`).attr('transform', 'translate('+xSelect+', '+ySelect+') scale(1,1)')
+        //         d3.select(`#hoverbx rect`).attr('fill','white')
+        //             .attr('opacity',0.75)
+        //         d3.select('#teambx').text(i[0])
+        //         d3.select('#hoverbx').text(i[1],i[2])
+        //     })
+        //     .on('mouseout', function (d,i,cir) {
+        //         d3.selectAll('#hoverbx text').text('')
+        //         d3.selectAll('#hoverbx rect').attr('opacity', 0)
+        //     })
+        // let logo = this.svg.append('g').attr('id','hoverbx')
+        //     logo.append('rect')
+        //         .attr('width',50)
+        //         .attr('height',50)
+        //         .attr('rx','25')
+        //         .attr('fill', 'none')
+        //
+        // logo.append('text')
+        //     .attr('id','teambx')
+        //     .attr('x', '25')
+        //     .attr('y', '25')
+        //     .attr('text-anchor', 'middle')
+        //     .style('font-size', '30')
+        //
+        // logo.append('text')
+        //     .attr('id', 'hoverbx')
+        //     .attr('x', 25)
+        //     .attr('y', 15)
+        //     .attr('text-anchor', 'middle')
+        //     .style('font-size', '20')
     }
 
 

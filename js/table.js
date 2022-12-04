@@ -32,13 +32,6 @@ class Table {
             offense: ["Team", "Win", "Loss", ...offCol],
             defense: ["Team", "Win", "Loss", ...defCol]
         }
-
-
-        // scales
-        // TODO ...............
-        //''''''''''''''''''
-
-
         this.drawTable();
     }
 
@@ -54,8 +47,8 @@ class Table {
                 return `${d}-header`
             })
             .text(d => {
-            return d.replaceAll('.', ' ')
-        })
+                return d.replaceAll('.', ' ')
+            })
         headers.selectAll('td').style('font-size', '11px')
         headers.selectAll('td').style('text-align', 'center')
         headers.attr('width', 50)

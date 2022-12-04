@@ -75,14 +75,15 @@ class Histogram{
         ).range(
             [this.margin.left, this.vizWidth - this.margin.right]
         )
+        let histogram = d3.histogram()
+            .value(function(){return d})
 
-        let y = d3.scaleLinear()
+        const y = d3.scaleLinear()
         .domain(
-            [0, d3.max(bins, d=> d.length)]
+            [0, d3.max(bins, d=>d.length)]
         ).range(
             [this.margin.top, this.visHeight - this.margin.bottom]
         )
-
         let svg = d3.select("#hist-svg")
 
         svg.attr("height", this.visHeight)
@@ -97,6 +98,7 @@ class Histogram{
         svg.append('g').call(d3.axisBottom(x).tickValues(thresholds))
         .attr("id", "hist-x-axis")
         .attr("transform", `translate(0, ${this.visHeight - this.margin.bottom})`)
+
         svg.append('g').call(d3.axisLeft(y))
         .attr("id", "hist-y-axis")
         .attr("transform", `translate(${this.margin.left}, 0)`)

@@ -112,8 +112,7 @@ loadData().then((dataA) => {
     d3.select("#columnHeaders").selectAll("td")
         .attr("class", "sortable")
         .on("click",
-        sortHandler)
-
+            sortHandler)
 });
 
 function sortHandler(d) {

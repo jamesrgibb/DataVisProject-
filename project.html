@@ -17,18 +17,18 @@
 
 <body>
 <header>
-    <h1>Data Visualization Final Project</h1>
-    <div>Name: James Gibb; E-Mail: u0915889@utah.edu; UID: u0915889</div>
-    <div>Name: Tj VonWald-Villiard; E-Mail: u1120747@utah.edu; UID: u1120747</div>
+    <h1 style="padding-left:10px">Data Visualization Final Project</h1>
+    <div style="padding-left:10px">Name: James Gibb; E-Mail: u0915889@utah.edu; UID: u0915889</div>
+    <div style="padding-left:10px">Name: Tj VonWald-Villiard; E-Mail: u1120747@utah.edu; UID: u1120747</div>
 </header>
 
 <div class="view">
-    <h2>Does Defense Really Win Championships?</h2>
-    <p>
+    <h2 style="padding-left:10px">Does Defense Really Win Championships?</h2>
+    <p style="padding-left:10px">
         Exploration of collegiate football statistics. Data take from <a
             href="https://www.kaggle.com/datasets/jeffgallini/college-football-team-stats-2019?select=cfb14.csv">Kaggle </a>
     </p>
-    <div style="width: fit-content">
+    <div style="padding:10px">
         <div class="view1" id="table-div"
              style="margin-left: 15px;width: 750px; height: 500px; padding: 10px;overflow: auto;">
             <table id="rankTable">
@@ -49,11 +49,18 @@
     </div>
     <div  style="width: fit-content; height: fit-content" class="view3">
         <div class="view2" id="chart-div" style="margin-left: 15px;width: 500px; height: 500px; padding: 10px;">
-            <svg id="chart-svg" style=" margin: 10px">
+            <svg id="chart-svg" style=" margin: 10px; display: inline-block;">
+                <table class="view2" id="legendTable" style="display: inline-block;">
+                    <thead>
+                    <tr id="legendHeaders">
+                    </tr>
+                    </thead>
+                    <tbody id="legendBody">
+                    </tbody>
+                </table>
             </svg>
-
         </div>
-        <div class="view2" id="scatter-div" style="margin-left: 15px;width:600px; height: 600px; padding: 10px;">
+        <div id="scatter-div" style="margin-left: 15px;width:600px; height: 600px; padding: 10px; display: inline-block ">
             <select selected="selectX-axis" id="selectX-axis">
                 <option value="none" selected disabled hidden>
                     X-Axis

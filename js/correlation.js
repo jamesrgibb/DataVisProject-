@@ -4,9 +4,10 @@ class Correlation {
         this.state = state;
         this.svg = d3.select('#chart-svg');
         this.height = 400;
-        this.width = 400;
+        this.width = 500;
         this.yAxisPadding = 50;
         this.xAxisPadding = 50;
+        this.labelBoxWidth = 150;
         this.margin = {left: 50, bottom: 50, top: 10, right: 20};
         this.years = this.state.years;
         this.animationDuration = 250;
@@ -29,10 +30,10 @@ class Correlation {
         //set up xAxis
         this.xAxis = d3.scaleTime()
             .domain(d3.extent(this.years))
-            .range([this.xAxisPadding, this.width])
+            .range([this.xAxisPadding, this.width - this.labelBoxWidth])
 
         this.svg.append('g')
-            .attr('transform', 'translate(0,' + (this.height-this.margin.right) + ')')
+            .attr('transform', 'translate(0,' + (this.height - this.margin.right) + ')')
             .attr('id', 'x-axis')
             .call(d3.axisBottom(this.xAxis))
             .attr('height', 30)
@@ -40,7 +41,7 @@ class Correlation {
         this.svg
             .select('#x-axis')
             .append('text')
-            .attr('x', (this.width+this.xAxisPadding)/2)
+            .attr('x', (this.width + this.xAxisPadding) / 2)
             .attr('y', 30)
             .text('Years')
             .style('text-anchor', "middle")
@@ -70,90 +71,109 @@ class Correlation {
 
         this.svg.append('rect')
             .attr('id', 'clear')
-            .attr('x',(this.width-this.xAxisPadding)/2)
-            .attr('y',this.height+25)
+            .attr('x', (this.width - this.xAxisPadding) / 2)
+            .attr('y', this.height + 25)
             .attr('rx', 4)
             .attr('ry', 4)
-            .attr('width',100)
-            .attr('height',30)
+            .attr('width', 100)
+            .attr('height', 30)
             .style('fill', 'mediumaquamarine')
             .style('cursor', 'pointer')
-            .style('stroke','black')
-            .style('stroke-width','.5px')
-            .on('click', function(){
-                document.querySelectorAll('.teamline').forEach(function(d){ return d.remove();});
+            .style('stroke', 'black')
+            .style('stroke-width', '.5px')
+            .on('click', function () {
+                document.querySelectorAll('.teamline').forEach(function (d) {
+                    return d.remove();
+                });
             })
-            .on('mouseenter', function(){
+            .on('mouseenter', function () {
                 d3.select(this)
                     .transition()
                     .duration(400)
                     .style('fill', 'white')
-                    .style('stroke','mediumaquamarine')
-                    .style('stroke-width','1px')
-                d3.select('#clearText').style('fill','mediumaquamarine')
+                    .style('stroke', 'mediumaquamarine')
+                    .style('stroke-width', '1px')
+                d3.select('#clearText').style('fill', 'mediumaquamarine')
             })
-            .on('mouseleave', function(){
+            .on('mouseleave', function () {
                 d3.select(this)
                     .transition()
                     .duration(400)
                     .style('fill', 'mediumaquamarine')
-                    .style('stroke','black')
-                    .style('stroke-width','.5px')
+                    .style('stroke', 'black')
+                    .style('stroke-width', '.5px')
 
-                d3.select('#clearText').style('fill','white')
+                d3.select('#clearText').style('fill', 'white')
             })
 
         this.svg.append('text')
-            .attr('id','clearText')
+            .attr('id', 'clearText')
             .text('Clear Selection')
             .style('text-anchor', "middle")
             .style('font-size', '12px')
             .attr('fill', 'white')
             .style('text-shadow', '1px')
-            .attr('x',(this.width/2)+25)
-            .attr('y',this.height+43)
-            .on('click', function(){
-                document.querySelectorAll('.teamline').forEach(function(d){ return d.remove();});
+            .attr('x', (this.width / 2) + 25)
+            .attr('y', this.height + 43)
+            .on('click', function () {
+                document.querySelectorAll('.teamline').forEach(function (d) {
+                    return d.remove();
+                });
             })
-            .on('mouseenter', function(d){
+            .on('mouseenter', function (d) {
                 d3.select('#clear')
                     .transition()
                     .duration(400)
                     .style('fill', 'white')
                     .style('stroke', 'mediumaquamarine')
-                    .style('stroke-width','1px')
+                    .style('stroke-width', '1px')
                 d3.select(this)
                     .transition()
                     .duration(400)
-                    .style('fill','mediumaquamarine')
+                    .style('fill', 'mediumaquamarine')
             })
-            .on('mouseleave', function(){
+            .on('mouseleave', function () {
 
                 d3.select('#clear')
                     .transition()
                     .duration(400)
                     .style('fill', 'mediumaquamarine')
-                    .style('stroke','black')
-                    .style('stroke-width','.5px')
+                    .style('stroke', 'black')
+                    .style('stroke-width', '.5px')
 
                 d3.select(this)
                     .transition()
                     .duration(400)
-                    .style('fill','white')
+                    .style('fill', 'white')
             })
             .style('cursor', 'pointer')
     }
 
-    chartSetup(currentTeam,corrStat) {
-        if(globalApplicationState.correlationState.selectedStat === corrStat){
-            document.querySelectorAll('.teamline').forEach(function(d){ return d.remove();});
+    chartSetup(currentTeam, corrStat) {
+        if (globalApplicationState.correlationState.selectedStat === corrStat) {
+            document.querySelectorAll('.teamline').forEach(function (d) {
+                return d.remove();
+            });
+            document.querySelectorAll('.teamLabel').forEach(function (d) {
+                return d.remove();
+            });
+            document.querySelectorAll('.teamCircle').forEach(function (d) {
+                return d.remove();
+            });
             d3.select('#y-axis').remove();
             d3.select('#x-axis').remove();
             d3.select('#y-axis').text('');
             globalApplicationState.correlationState.selectedTeams.add(currentTeam);
-        }
-        else{
-            document.querySelectorAll('.teamline').forEach(function(d){ return d.remove();});
+        } else {
+            document.querySelectorAll('.teamline').forEach(function (d) {
+                return d.remove();
+            });
+            document.querySelectorAll('.teamLabel').forEach(function (d) {
+                return d.remove();
+            });
+            document.querySelectorAll('.teamCircle').forEach(function (d) {
+                return d.remove();
+            });
             d3.select('#y-axis').remove();
             d3.select('#x-axis').remove();
             d3.select('#y-axis').text('');
@@ -165,7 +185,7 @@ class Correlation {
         const stats = Object.keys(this.data.Akron)
         const xax = this.xAxis
         let maxValue = []
-        globalApplicationState.correlationState.selectedTeams.forEach(function(d){
+        globalApplicationState.correlationState.selectedTeams.forEach(function (d) {
             let locMax = d3.max(globalApplicationState.correlation.data[d][corrStat])
             maxValue.push(locMax)
         })
@@ -173,10 +193,10 @@ class Correlation {
         //set up xAxis
         this.xAxis = d3.scaleTime()
             .domain(d3.extent(this.years))
-            .range([this.xAxisPadding, this.width])
+            .range([this.xAxisPadding, this.width - this.labelBoxWidth])
 
         this.svg.append('g')
-            .attr('transform', 'translate(0,' + (this.height-this.margin.right) + ')')
+            .attr('transform', 'translate(0,' + (this.height - this.margin.right) + ')')
             .attr('id', 'x-axis')
             .call(d3.axisBottom(this.xAxis))
             .attr('height', 30)
@@ -184,7 +204,7 @@ class Correlation {
         this.svg
             .select('#x-axis')
             .append('text')
-            .attr('x', (this.width+this.xAxisPadding)/2)
+            .attr('x', (this.width + this.xAxisPadding) / 2)
             .attr('y', 30)
             .text('Years')
             .style('text-anchor', "middle")
@@ -227,9 +247,14 @@ class Correlation {
 
         //set up the yAxis
         const yax = this.yAxis
-
+        let lastIdx = 0;
+        let avgs = {}
+        globalApplicationState.correlationState.selectedTeams.forEach(function (d){
+            let av = d3.mean(globalApplicationState.correlation.data[d][corrStat])
+            avgs[d] = av
+        })
         // create the lines for the data
-        for(let k of globalApplicationState.correlationState.selectedTeams) {
+        for (let k of globalApplicationState.correlationState.selectedTeams) {
             this.svg.append('g')
                 .append('path')
                 .attr('id', `line-${k}`)
@@ -237,24 +262,83 @@ class Correlation {
                 .datum(this.data[k][corrStat])
                 .attr('fill', 'none')
                 .attr('stroke', teamColor(k))
-                .attr('stroke-width', 1)
+                .attr('stroke-width', 2)
                 .attr('d', (list) => {
                     return d3.line()
                         .x(function (d, i, c) {
                             return xax(globalApplicationState.years[i]);
                         })
                         .y(function (d, i, c) {
+                            lastIdx = d
                             return yax(d)
                         })
                         (list)
                 })
-                .text(function (d, i, c) {
-                    return d
-                })
-            this.svg.selectAll("line")
-                .enter()
-                .append("text")
+
+            this.svg.append('circle')
+                .attr('id', `label-${k}-circle`)
+                .attr('class', 'teamCircle')
+                .attr('cx', xax(globalApplicationState.years[globalApplicationState.years.length - 2]))
+                .attr('cy', yax(lastIdx))
+                .attr('r', 3)
+                .style('fill', teamColor(k))
+                .style('stroke', 'black')
+
+
+            this.svg.append('text')
+                .attr('id', `label-${k}`)
+                .attr('class', 'teamLabel')
+                .attr('x', 5+xax(globalApplicationState.years[globalApplicationState.years.length - 2]))
+                .attr('y', yax(lastIdx))
+                .style('fill',teamColor(k))
                 .text(k)
+
+            // this.svg.append('rect')
+            //     .attr('id', 'legend')
+            //     .attr('class', 'teamLabel')
+            //     .attr('x', (this.width) - this.labelBoxWidth + 10)
+            //     .attr('y', this.height / 1.6)
+            //     .attr('width', 125)
+            //     .attr('height', this.height - 20 - (this.height / 1.6))
+            //     .style('fill', 'white')
+            //     .style('overflow', 'auto')
+            //     .style('stroke', 'gray')
+            d3.select()
+            let lh = d3.select('#legendHeaders')
+            lh.style('font-weight', 'bold')
+                .style('font-decoration','underline')
+            let legendCol = ['Team','Average']
+            lh.selectAll('td')
+                .data(legendCol)
+                .join('td')
+                .text(d=>d)
+            let legendRow = d3.select('#legendBody')
+                .selectAll('tr')
+                .data(Object.keys(avgs))
+                .join('tr')
+            let legendCells =
+                legendRow.selectAll('td')
+                    .data(function (a) {
+                        return legendCol.map(function(col){
+                            if(col === 'Team'){
+                                return {column: col, value: a, team: a}
+                            }
+                            if(col === 'Average'){
+                               return {column: col, value: avgs[a], team: a}
+                            }
+                        })
+                    })
+                    .join('td')
+                    .attr('id', function(d){
+                        return `${d.team}-average`
+                    })
+                    .text(function (d){
+                        return d.value
+                    })
+                    .style('fill',function (d){
+                        return teamColor(d.team)
+                    })
+
         }
 
     }
