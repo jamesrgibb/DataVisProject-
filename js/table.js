@@ -166,6 +166,11 @@ class Table {
                 }
             });
 
+            // sort handler
+            d3.select("#columnHeaders").selectAll("td")
+            .attr("class", "sortable")
+            .on("click", sortHandler)
+
     }
 
     sortTable(colName) {

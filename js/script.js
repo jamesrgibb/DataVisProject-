@@ -99,6 +99,12 @@ loadData().then((dataA) => {
     tablediv.insert("select", "table").attr('name', "season").attr("id", "season").selectAll("option").data(seasons)
         .join("option").attr("value", d => d).attr("selected", d => d === "20" ? "selected" : "").text(d => "20" + d);
 
+    let histResOptions = [5, 6, 7, 8, 9 ,10, 20]
+    let histDiv = d3.select("#hist-div")
+    histDiv.insert("label", "svg").attr("for", "resolution").text("Resolution: ")
+    histDiv.insert("select", "svg").attr("name", "resolution").attr("id", "res-button").selectAll("option").data(histResOptions)
+        .join("option").attr("value", d=> d).attr("selected", d=> d === 5 ? "selected" : "")
+
     // add dropdown to select column grouping
     tablediv.insert("label", "table").attr("for", "grouping").text("Choose Grouping:")
     tablediv.insert("select", "table").attr('name', "grouping").attr("id", "grouping").selectAll("option").data(["offense", "defense"])
@@ -108,17 +114,23 @@ loadData().then((dataA) => {
     // attach handler to select
     d3.select("#season").on("change", changeSeasonHandler)
     d3.select("#grouping").on("change", changeGroupingHandler)
+    d3.select("#res-button").on("change", changeHistResHandler)
+
     // sort handler
-    d3.select("#columnHeaders").selectAll("td")
-        .attr("class", "sortable")
-        .on("click",
-        sortHandler)
+    // d3.select("#columnHeaders").selectAll("td")
+    //     .attr("class", "sortable")
+    //     .on("click",
+    //     sortHandler)
 
 });
 
 function sortHandler(d) {
     let header = this
     globalApplicationState.table.sortTable(this.__data__)
+}
+
+function changeHistResHandler(d){
+  globalApplicationState.histogram.setResolution(parseInt(this.value))
 }
 
 function changeGroupingHandler(d){
