@@ -84,7 +84,7 @@ class Scatter {
                 yr)
         });
 
-        this.updateScatter('Def.Rank', 'Win', 7)
+        this.updateScatter('Def.Rank', 'Win', 6)
 
     }
 

@@ -64,8 +64,8 @@ loadData().then((dataA) => {
     globalApplicationState.chartData = parseStats(globalApplicationState.teamMap);
     globalApplicationState.logos = logoDataStructure(globalApplicationState.chartData, dataA[0])
     const defaultState = {
-        drawData: globalApplicationState.data[loadedData.length - 1],
-        tableData: globalApplicationState.data[loadedData.length - 1],
+        drawData: globalApplicationState.data[loadedData.length - 2],
+        tableData: globalApplicationState.data[loadedData.length - 2],
         currentGrouping: "offense",
         seasonalData: loadedData,
         selectedStat: '',
@@ -97,7 +97,7 @@ loadData().then((dataA) => {
     let tablediv = d3.select("#table-div")
     tablediv.insert("label", "table").attr("for", "season").text("Choose Season:")
     tablediv.insert("select", "table").attr('name', "season").attr("id", "season").selectAll("option").data(seasons)
-        .join("option").attr("value", d => d).attr("selected", d => d === "20" ? "selected" : "").text(d => "20" + d);
+        .join("option").attr("value", d => d).property("selected", d => d === "19").text(d => "20" + d);
 
     let histResOptions = [10, 9, 8, 7, 6, 5]
     let histDiv = d3.select("#hist-div")
