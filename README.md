@@ -1,9 +1,10 @@
 # DataVisProject
-Data Visualization Project 
 
 
 ## Overview
 All of the code for this project is our own. The only library used was the R JSON library that we used to work with the Logo dataset for our scatterplot tooltip. 
+
+Our question was whether or not good defense wins championships in college level football. We built a tool for exploring 8 seasons of collegiate football data. Using the table, we can chart the change overtime of each time for each statistic. We can also use the table to update the histogram, which shows where a particular team lies within the distribution of the chosen statistic. We also included a separate scatterplot which can graph any two data features together. This allows a user to examine the correlation of any two stats for all teams. 
 
 ### Table
 
