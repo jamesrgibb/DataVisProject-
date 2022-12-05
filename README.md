@@ -4,6 +4,9 @@
 ## Overview
 All of the code for this project is our own. The only library used was the R JSON library that we used to work with the Logo dataset for our scatterplot tooltip. 
 
+## Project Link
+https://jamesrgibb.github.io/DataVisProject-/project.html
+
 ## Video Link
 https://youtu.be/ojc1iKqe7HY
 
