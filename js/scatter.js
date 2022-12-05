@@ -89,6 +89,11 @@ class Scatter {
     }
 
     updateScatter(xStat, yStat, yearStat) {
+
+        if(xStat === "none" || yStat === "none" || yearStat === "none"){
+            console.log("One or more values not selected")
+            return 
+        }
         document.querySelectorAll('circle').forEach(function(d){ return d.remove();})
         let defaultTriple = []
         let xa = []
