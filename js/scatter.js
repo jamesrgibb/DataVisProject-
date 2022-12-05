@@ -3,8 +3,8 @@ class Scatter {
         this.state = state;
         this.data = state.chartData;
         this.svg = d3.select('#scatter-svg');
-        this.height = 600;
-        this.width = 600;
+        this.height = 500;
+        this.width = 500;
         this.yAxisPadding = 50;
         this.xAxisPadding = 50;
         this.margin = {left: 50, bottom: 50, top: 10, right: 20};
@@ -20,15 +20,6 @@ class Scatter {
         this.drawData = state.scatterState.drawData.filter(d => !state.missingTeamData.includes(d.Team))
         this.svg.style('margin-left', 'auto')
             .style('margin-right', 'auto')
-        // this.scatterData = d3.rollup(this.drawData, function (v) {
-        //         let reducedMap = new Map()
-        //         columns.forEach(function (col) {
-        //             reducedMap.set(col, v[0][col])
-        //         })
-        //         return Object.fromEntries(reducedMap)
-        //     },
-        //     d => d.Team
-        // )
         d3.select('#selectY-axis')
             .selectAll('myOptions')
             .data(this.columns)
@@ -79,7 +70,7 @@ class Scatter {
         this.svg
             .attr('width', this.width + this.margin.left + this.margin.right)
             .attr('height', this.height + this.margin.top + this.margin.bottom)
-        const button = d3.select('#display-graph')
+        const button = d3.select('#display-graph').style('margin-left', this.width/2.5+'px')
 
         button.on('click', function (d) {
             d3.select('dot').exit().remove();

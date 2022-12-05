@@ -18,7 +18,18 @@ th {
     min-width: 50px;
     background: rgb(248, 248, 248);
 }
-
+.view{
+    display: flex;
+    flex-direction: row;
+}
+.viewHist{
+    display: flex;
+    flex-direction: column;
+}
+.viewScatter{
+    display: flex;
+    flex-direction: column;
+}
 
 .view1{
     display: inline-block;

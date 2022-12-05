@@ -22,13 +22,13 @@
     <div style="padding-left:10px">Name: Tj VonWald-Villiard; E-Mail: u1120747@utah.edu; UID: u1120747</div>
 </header>
 
-<div class="view">
+<div>
     <h2 style="padding-left:10px">Does Defense Really Win Championships?</h2>
     <p style="padding-left:10px">
         Exploration of collegiate football statistics. Data take from <a
             href="https://www.kaggle.com/datasets/jeffgallini/college-football-team-stats-2019?select=cfb14.csv">Kaggle </a>
     </p>
-    <div style="padding:10px">
+    <div class="view" style="padding:10px">
         <div class="view1" id="table-div"
              style="margin-left: 15px;width: 750px; height: 500px; padding: 10px;overflow: auto;">
             <table id="rankTable">
@@ -40,9 +40,39 @@
                 </tbody>
             </table>
         </div>
+        <div class="viewHist" id="hist-div">
+            <svg id="hist-svg" style="margin:10px">
+            </svg>
+        </div>
+    </div>
+    <div class="view">
+        <div id="scatter-div"
+             style="margin-left: 15px; padding: 10px;">
+            <select class="viewScatter" selected="selectX-axis" id="selectX-axis">
+                <option value="none" selected disabled hidden>
+                    X-Axis
+                </option>
+            </select>
+            <select class="viewScatter" id="selectY-axis">
+                <option value="none" selected disabled hidden>
+                    Y-Axis
+                </option>
+            </select>
+            <select class="viewScatter" id="select-Year">
+                <option value="none" selected disabled hidden>
+                    Year
+                </option>
+            </select>
+            <button class="viewScatter " class="sc" id="display-graph">Display Graph</button>
+            <svg id="scatter-svg"></svg>
+            <div id="schoolLogo" class="tooltip sc" style="padding:10px ">
+
+            </div>
+        </div>
         <div class="view1" id="chart-div"
-             style="margin-left: 15px;width: 500px; height: 500px; padding: 10px; display: inline-block; overflow:auto">
-            <svg id="chart-svg" style=" margin: 10px; display: inline-block;"></svg><table id="legendTable" style="display: inline-block">
+             style="margin-left: 15px;padding: 10px; overflow:auto">
+            <svg id="chart-svg" style=" margin: 10px; "></svg>
+            <table id="legendTable">
                 <thead>
                 <tr id="legendHeaders">
                 </tr>
@@ -50,36 +80,6 @@
                 <tbody id="legendBody">
                 </tbody>
             </table>
-        </div>
-
-        <div class="view1" id="hist-div">
-
-            <svg id="hist-svg" style="margin: 10px">
-
-            </svg>
-
-        </div>
-        <div id="scatter-div"
-             style="margin-left: 15px;width:800px; height: 600px; padding: 10px; display: inline-block">
-            <select selected="selectX-axis" id="selectX-axis">
-                <option value="none" selected disabled hidden>
-                    X-Axis
-                </option>
-            </select>
-            <select id="selectY-axis">
-                <option value="none" selected disabled hidden>
-                    Y-Axis
-                </option>
-            </select>
-            <select id="select-Year">
-                <option value="none" selected disabled hidden>
-                    Year
-                </option>
-            </select>
-            <button class= "sc" id="display-graph">Display Graph</button>
-            <svg id="scatter-svg" ></svg><div id ="schoolLogo" class="tooltip sc" style="padding:10px ">
-
-        </div>
         </div>
     </div>
 </div>
