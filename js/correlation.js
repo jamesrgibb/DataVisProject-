@@ -285,7 +285,7 @@ class Correlation {
             this.svg.append('circle')
                 .attr('id', `label-${k}-circle`)
                 .attr('class', 'teamCircle')
-                .attr('cx', xax(globalApplicationState.years[globalApplicationState.years.length - 2]))
+                .attr('cx', xax(globalApplicationState.years[globalApplicationState.years.length - 1]))
                 .attr('cy', yax(lastIdx))
                 .attr('r', 3)
                 .style('fill', teamColor(k))

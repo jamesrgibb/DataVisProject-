@@ -8,8 +8,8 @@ class Scatter {
         this.yAxisPadding = 50;
         this.xAxisPadding = 50;
         this.margin = {left: 50, bottom: 50, top: 10, right: 20};
-        this.yearsDisplayed = state.years
-        this.years = {0: 2012,1:2013,2:2014,3:2015,4:2016,5:2017,6:2018,7:2019}
+        this.yearsDisplayed = [2013,2014,2015,2016,2017,2018,2019,2020]
+        this.years = {0: 2013,1:2014,2:2015,3:2016,4:2017,5:2018,6:2019,7:2020}
         this.yAxis = null;
         this.xAxis = null;
         this.teams = Object.keys(this.data)
@@ -62,7 +62,7 @@ class Scatter {
             .data(this.yearsDisplayed)
             .enter()
             .append('option')
-            .text(d => d.getFullYear())
+            .text(d => d)
             .attr('value', function (d,i) {
                 return i
             })
