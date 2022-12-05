@@ -22,6 +22,10 @@ th {
     display: flex;
     flex-direction: row;
 }
+.view-col{
+    display: flex;
+    flex-direction: column;
+}
 .viewHist{
     display: flex;
     flex-direction: column;

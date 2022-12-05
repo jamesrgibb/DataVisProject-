@@ -3,8 +3,8 @@ class Correlation {
         //Create a new Correlation with the given data
         this.state = state;
         this.svg = d3.select('#chart-svg');
-        this.height = 400;
-        this.width = 400;
+        this.height = 300;
+        this.width = 300;
         this.yAxisPadding = 50;
         this.xAxisPadding = 50;
         this.labelBoxWidth = 150;

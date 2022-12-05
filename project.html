@@ -30,7 +30,7 @@
     </p>
     <div class="view" style="padding:10px">
         <div class="view1" id="table-div"
-             style="margin-left: 15px;width: 750px; height: 500px; padding: 10px;overflow: auto;">
+             style="margin-left: 15px;width: 750px; height: 750px; padding: 10px;overflow: auto;">
             <table id="rankTable">
                 <thead>
                 <tr id="columnHeaders">
@@ -40,10 +40,25 @@
                 </tbody>
             </table>
         </div>
-        <div class="viewHist" id="hist-div">
-            <svg id="hist-svg" style="margin:10px">
-            </svg>
+        <div class="view-col">
+            <div class="viewHist" id="hist-div">
+                <svg id="hist-svg" style="margin:10px">
+                </svg>
+            </div>
+            <div class="view1" id="chart-div"
+                 style="margin-left: 15px;padding: 10px; overflow:auto">
+                <svg id="chart-svg" style=" margin: 10px; "></svg>
+                <table id="legendTable">
+                    <thead>
+                    <tr id="legendHeaders">
+                    </tr>
+                    </thead>
+                    <tbody id="legendBody">
+                    </tbody>
+                </table>
+            </div>
         </div>
+        
     </div>
     <div class="view">
         <div id="scatter-div"
@@ -69,18 +84,7 @@
 
             </div>
         </div>
-        <div class="view1" id="chart-div"
-             style="margin-left: 15px;padding: 10px; overflow:auto">
-            <svg id="chart-svg" style=" margin: 10px; "></svg>
-            <table id="legendTable">
-                <thead>
-                <tr id="legendHeaders">
-                </tr>
-                </thead>
-                <tbody id="legendBody">
-                </tbody>
-            </table>
-        </div>
+        
     </div>
 </div>
 <link rel="stylesheet" href="style.css"/>
