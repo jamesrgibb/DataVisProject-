@@ -410,4 +410,3 @@ function logoDataStructure(teamName, dataA) {
     })
     return team
 }
-

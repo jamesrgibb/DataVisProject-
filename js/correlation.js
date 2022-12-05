@@ -115,7 +115,7 @@ class Correlation {
             .style('font-size', '12px')
             .attr('fill', 'white')
             .style('text-shadow', '1px')
-            .attr('x', (this.width) / 1.75+4)
+            .attr('x', (this.width) / 1.65+5)
             .attr('y', this.height + 43)
             .on('click', function () {
                 document.querySelectorAll('.teamline').forEach(function (d) {
@@ -292,15 +292,15 @@ class Correlation {
                 .style('stroke', 'black')
 
 
-           // this.svg.append('text')
-           //      .attr('id', `label-${k}`)
-           //      .attr('class', 'teamLabel')
-           //      .attr('x', 5+xax(globalApplicationState.years[globalApplicationState.years.length - 2]))
-           //      .attr('y', yax(lastIdx))
-           //      .style('fill',teamColor(k))
-           //      .text(k)
+            // this.svg.append('text')
+            //      .attr('id', `label-${k}`)
+            //      .attr('class', 'teamLabel')
+            //      .attr('x', 5+xax(globalApplicationState.years[globalApplicationState.years.length - 2]))
+            //      .attr('y', yax(lastIdx))
+            //      .style('fill',teamColor(k))
+            //      .text(k)
 
-               d3.select('#legendTable')
+            d3.select('#legendTable')
                 .style('margin-left', 'auto')
                 .style('margin-right', 'auto')
 
@@ -328,7 +328,7 @@ class Correlation {
                                 return {column: col, value: a, team: a}
                             }
                             if(col === 'Average'){
-                               return {column: col, value: avgs[a], team: a}
+                                return {column: col, value: avgs[a], team: a}
                             }
                         })
                     })
